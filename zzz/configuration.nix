@@ -6,9 +6,10 @@
 
 let
 
-  settings = {
+  personal = {
     email = "evertedsphere@gmail.com";
     username = "evertedsphere";
+    systemUsername = "rlptgod";
   };
 
   pinned = {
@@ -40,6 +41,7 @@ in rec {
 
   nixpkgs.pkgs =
     import "${pinned.nixpkgs}" { inherit (config.nixpkgs) config; };
+  nixpkgs.config.allowUnfree = true;
 
   nix.nixPath = [ "nixpkgs=${pinned.nixpkgs}" ];
 
@@ -47,6 +49,7 @@ in rec {
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # ZFS/filesystem configuration
   boot.supportedFilesystems = [ "zfs" ];
   boot.initrd.supportedFilesystems = [ "zfs" ];
   boot.zfs.enableUnstable = true;
@@ -73,27 +76,19 @@ in rec {
   time.timeZone = "Asia/Kolkata";
 
   environment.pathsToLink = [ "/share/zsh" ];
-  environment.systemPackages = with nixpkgs.pkgs; [ ];
+  environment.systemPackages = [ ];
 
-  # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
     permitRootLogin = "yes";
     passwordAuthentication = true;
   };
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  networking.firewall.allowedTCPPorts = [ ];
+  networking.firewall.allowedUDPPorts = [ ];
 
-  # Enable CUPS to print documents.
-  # services.printing.enable = true;
-
-  # Enable sound.
-  # sound.enable = true;
-  # hardware.pulseaudio.enable = true;
+  sound.enable = true;
+  hardware.pulseaudio.enable = true;
 
   services.xserver = {
     enable = true;
@@ -103,27 +98,34 @@ in rec {
     displayManager.startx.enable = true;
   };
 
-  users.users.rlptgod = {
+  users.users."${personal.systemUsername}" = {
     uid = 1337;
     isNormalUser = true;
     extraGroups = [ "wheel" ];
-
   };
 
   home-manager = {
     useUserPackages = false;
     useGlobalPkgs = true;
-    users.rlptgod = { pkgs, ... }: {
+    users."${personal.systemUsername}" = { pkgs, ... }: {
       home = {
         packages = with pkgs; [
           nixops
+          next
+          fd
           wget
           curl
           htop
-          git
           gitAndTools.git-crypt
           nixfmt
-	  iosevka
+          iosevka
+          mononoki
+          ormolu
+	  discord
+          pavucontrol
+          nodejs
+          adapta-gtk-theme
+          dconf
         ];
 
         sessionVariables = {
@@ -136,34 +138,55 @@ in rec {
 
       news.display = "show";
 
+        gtk = {
+          enable = true;
+          theme = {
+            name = "Adapta";
+          };
+        };
+
       programs = {
+        bat = { enable = true; };
         browserpass.enable = true;
         direnv.enable = true;
         feh.enable = true;
         firefox.enable = true;
         kitty = {
           enable = true;
-          font.name = "Iosevka";
-	  settings = {
-	    font_size = "16.0";
-	  };
+          font.name = "Mononoki";
+          settings = { font_size = "16.0"; };
         };
-	neovim = {
-	  enable=true;
-	};
+        neovim = {
+          enable = true;
+          extraConfig = builtins.readFile ./nvim/custom.vim;
+          plugins = with pkgs.vimPlugins; [
+            vim-commentary
+            vim-surround
+            easymotion
+            pathogen
 
-	password-store = {
-	  enable = true;
-	};
-	
-	readline={enable=true;};
-	rofi={
-	enable=true;
-	};
-	mpv = {
-	  enable=true;
-	};
-	starship={enable=true;};
+            vim-orgmode
+	    vim-yaml
+            dhall-vim
+            idris-vim
+
+            editorconfig-vim
+            fzf-vim
+            palenight-vim
+	    coc-nvim
+	    coc-fzf
+	    coc-prettier
+	    coc-yaml
+          ];
+        };
+        command-not-found = { enable = true; };
+
+        password-store = { enable = true; };
+
+        readline = { enable = true; };
+        rofi = { enable = true; };
+        mpv = { enable = true; };
+        starship = { enable = true; };
 
         keychain = {
           enable = true;
@@ -177,8 +200,8 @@ in rec {
 
         git = {
           enable = true;
-          userEmail = settings.email;
-          userName = settings.username;
+          userEmail = personal.email;
+          userName = personal.username;
         };
 
         gpg = { enable = true; };
