@@ -1,0 +1,3 @@
+{
+  zzz = ./zzz/configuration.nix;
+}
