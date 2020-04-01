@@ -6,7 +6,7 @@
 
 let
 
-  personal = {
+  globalSettings = {
     email = "evertedsphere@gmail.com";
     username = "evertedsphere";
     systemUsername = "rlptgod";
@@ -98,17 +98,21 @@ in rec {
     displayManager.startx.enable = true;
   };
 
-  users.users."${personal.systemUsername}" = {
+  users.users."${globalSettings.systemUsername}" = {
     uid = 1337;
     isNormalUser = true;
     extraGroups = [ "wheel" ];
+    shell = "/home/${globalSettings.systemUsername}/.nix-profile/bin/zsh";
   };
 
   home-manager = {
     useUserPackages = false;
     useGlobalPkgs = true;
-    users."${personal.systemUsername}" = { pkgs, ... }: {
+    users."${globalSettings.systemUsername}" = { pkgs, ... }: {
       home = {
+        extraOutputsToInstall = [ "doc" "info" "devdoc" ];
+        username = globalSettings.systemUsername;
+
         packages = with pkgs; [
           nixops
           next
@@ -121,11 +125,11 @@ in rec {
           iosevka
           mononoki
           ormolu
-	  discord
+          discord
           pavucontrol
           nodejs
-          adapta-gtk-theme
           dconf
+          pinentry
         ];
 
         sessionVariables = {
@@ -134,21 +138,47 @@ in rec {
         };
       };
 
+      xdg = {
+        userDirs = {
+          enable = true;
+          desktop = "desktop";
+          documents = "docs";
+          download = "down";
+          music = "music";
+          pictures = "img";
+          publicShare = "public";
+          videos = "videos";
+        };
+      };
       manual.html.enable = true;
+      manual.manpages.enable = true;
+      manual.json.enable = true;
 
       news.display = "show";
 
-        gtk = {
-          enable = true;
-          theme = {
-            name = "Adapta";
-          };
+      gtk = {
+        enable = true;
+        theme = {
+          name = "Adapta-Nokto-Eta";
+          package = pkgs.adapta-gtk-theme;
         };
+        iconTheme = {
+          name = "Papirus-Dark";
+          package = pkgs.papirus-icon-theme;
+        };
+        gtk2.extraConfig = ''
+          gtk-application-prefer-dark-theme = true
+        '';
+        gtk3.extraConfig = { gtk-application-prefer-dark-theme = true; };
+      };
 
       programs = {
         bat = { enable = true; };
         browserpass.enable = true;
-        direnv.enable = true;
+        direnv = {
+          enable = true;
+          enableZshIntegration = true;
+        };
         feh.enable = true;
         firefox.enable = true;
         kitty = {
@@ -166,17 +196,17 @@ in rec {
             pathogen
 
             vim-orgmode
-	    vim-yaml
+            vim-yaml
             dhall-vim
             idris-vim
 
             editorconfig-vim
             fzf-vim
             palenight-vim
-	    coc-nvim
-	    coc-fzf
-	    coc-prettier
-	    coc-yaml
+            coc-nvim
+            coc-fzf
+            coc-prettier
+            coc-yaml
           ];
         };
         command-not-found = { enable = true; };
@@ -200,8 +230,8 @@ in rec {
 
         git = {
           enable = true;
-          userEmail = personal.email;
-          userName = personal.username;
+          userEmail = globalSettings.email;
+          userName = globalSettings.username;
         };
 
         gpg = { enable = true; };
@@ -226,8 +256,20 @@ in rec {
         };
       };
 
+      services = {
+        gpg-agent = {
+          enable = true;
+          enableSshSupport = true;
+        };
+      };
+
       xsession = {
+        numlock.enable = true;
         enable = true;
+        pointerCursor = {
+          package = pkgs.xorg.xcursorthemes;
+          name = "whiteglass";
+        };
         windowManager.xmonad = {
           enable = true;
           enableContribAndExtras = true;
