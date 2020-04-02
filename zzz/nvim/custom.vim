@@ -30,16 +30,12 @@ set expandtab
 
 packloadall
 
+" if (has("termguicolors"))
+"   set termguicolors
+" endif
 
-if (has("termguicolors"))
-  set termguicolors
-  let g:onedark_termcolors=256
-endif
-
-let g:onedark_hide_endofbuffer=1
-let g:onedark_terminal_italics=1
 set background=dark
-colorscheme onedark
+colorscheme wal
 
 hi Normal     ctermbg=NONE guibg=NONE
 hi LineNr     ctermbg=NONE guibg=NONE

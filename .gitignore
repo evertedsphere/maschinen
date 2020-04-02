@@ -1,2 +1,4 @@
 *.nixops
 *.nixops-*
+wal-cache/
+**/dist-newstyle/
