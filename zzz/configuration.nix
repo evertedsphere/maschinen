@@ -1,4 +1,4 @@
-# Edit this configuration file to define what should be installed on
+
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
@@ -86,7 +86,13 @@ in rec {
       layout = "us";
       xkbOptions = "ctrl:nocaps";
       libinput.enable = true;
-      displayManager.startx.enable = true;
+
+      desktopManager.xterm.enable = true;
+      displayManager.lightdm.enable = true;
+      windowManager.session = [{
+        name = "dummy";
+        start = "${nixpkgs.pkgs.coreutils}/bin/true";
+      }];
     };
   };
 
@@ -96,7 +102,7 @@ in rec {
   users.users."${globalSettings.systemUsername}" = {
     uid = 1337;
     isNormalUser = true;
-    extraGroups = [ "wheel" "docker" ];
+    extraGroups = [ "wheel" "docker" "systemd-journal" ];
     shell = "/home/${globalSettings.systemUsername}/.nix-profile/bin/zsh";
   };
 
@@ -137,6 +143,7 @@ in rec {
           qbittorrent
 
           xclip
+          xdg_utils
         ];
 
         file.".xinitrc".source = ./.xinitrc;
@@ -197,32 +204,68 @@ in rec {
         kitty = {
           enable = true;
           font = {
-            name = "Iosevka";
-            package = pkgs.iosevka;
+            name = "PragmataPro Mono";
+            # package = pkgs.iosevka;
           };
+
           settings = {
+            window_padding_width = 12;
             font_size = "14.0";
-            background_opacity = "0.7";
+            background_opacity = "0.55";
           };
+
+          extraConfig = ''
+            background            #161718
+            foreground            #c4c8c5
+            cursor                #d0d0d0
+            selection_background  #444444
+            color0                #000000
+            color8                #000000
+            color1                #fc5ef0
+            color9                #fc5ef0
+            color2                #86c38a
+            color10               #94f936
+            color3                #ffd6b1
+            color11               #f5ffa7
+            color4                #85befd
+            color12               #95cbfe
+            color5                #b9b5fc
+            color13               #b9b5fc
+            color6                #85befd
+            color14               #85befd
+            color7                #dfdfdf
+            color15               #dfdfdf
+            selection_foreground  #161718
+          '';
         };
 
         neovim = {
           enable = true;
           extraConfig = builtins.readFile ./nvim/custom.vim;
           plugins = with pkgs.vimPlugins; [
+            # Basics
             vim-commentary
             vim-surround
             easymotion
-            pathogen
 
+            # Utils
+            pathogen
+            fzf-vim
+            editorconfig-vim
+
+            # Formats
             vim-orgmode
             vim-yaml
             dhall-vim
             idris-vim
+            vim-nix
 
-            editorconfig-vim
-            fzf-vim
-            palenight-vim
+            # UI
+            vim-airline
+            vim-airline-themes
+            awesome-vim-colorschemes
+
+            # Completion
             coc-nvim
             coc-fzf
             coc-prettier
@@ -237,7 +280,6 @@ in rec {
         readline = { enable = true; };
         rofi = { enable = true; };
         mpv = { enable = true; };
-        starship = { enable = true; };
 
         keychain = {
           enable = true;
@@ -276,13 +318,34 @@ in rec {
           history.save = 100000;
           history.size = 100000;
         };
+
       };
 
-      # services = {
-      #   picom = {
-      #     enable = true;
-      #   };
-      # };
+      services = {
+        udiskie.enable = true;
+        picom = {
+          enable = true;
+          backend = "glx";
+          experimentalBackends = true;
+          extraOptions = ''
+            blur: 
+            {
+              method = "gaussian";
+              size = 12;
+              deviation = 7.0;
+            };
+            shadow-radius: 15;
+          '';
+          fade = true;
+          vSync = true;
+          shadow = true;
+          shadowOpacity = "1.0";
+          shadowOffsets = [ (-15) (-15) ];
+          fadeDelta = 3;
+          fadeSteps = [ "0.04" "0.04" ];
+          # inactiveDim = "0.20";
+        };
+      };
 
       xsession = {
         numlock.enable = true;

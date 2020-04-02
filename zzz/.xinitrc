@@ -1,3 +1,3 @@
 sh ~/.fehbg &
 picom -b
-exec xmonad
+exec dbus-launch --exit-with-session xmonad

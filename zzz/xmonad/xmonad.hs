@@ -2,6 +2,7 @@ import qualified Data.Map as M
 import Data.Monoid
 import System.Exit
 import XMonad
+import XMonad.Layout.Spacing
 import qualified XMonad.StackSet as W
 
 myTerminal = "kitty"
@@ -15,7 +16,7 @@ myClickJustFocuses :: Bool
 myClickJustFocuses = True
 
 -- Width of the window border in pixels.
-myBorderWidth = 3
+myBorderWidth = 0
 
 -- modMask lets you specify which modkey you want to use.
 myModMask = mod4Mask
@@ -26,7 +27,7 @@ myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 --
 myNormalBorderColor = "#dddddd"
 
-myFocusedBorderColor = "#0000ff"
+myFocusedBorderColor = "#ddaaaa"
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -89,7 +90,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) =
       --
       [ ((m .|. modm, k), windows $ f i)
         | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9],
-          (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
+          (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
       ]
       ++
       --
@@ -129,7 +130,6 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) =
       -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
 
-------------------------------------------------------------------------
 -- Layouts:
 
 -- You can specify and transform your layouts by modifying these values.
@@ -139,19 +139,19 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) =
 --
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
---
-myLayout = tiled ||| Mirror tiled ||| Full
+
+myLayout = addSpacing $ tiled ||| Mirror tiled ||| Full
   where
+    addSpacing = spacingRaw False (Border 12 12 12 12) True (Border 12 12 12 12) True
     -- default tiling algorithm partitions the screen into two panes
     tiled = Tall nmaster delta ratio
     -- The default number of windows in the master pane
     nmaster = 1
     -- Default proportion of screen occupied by master pane
-    ratio = 2 / 3
+    ratio = 4 / 7
     -- Percent of screen to increment by when resizing panes
     delta = 5 / 100
 
-------------------------------------------------------------------------
 -- Window rules:
 
 -- Execute arbitrary actions and WindowSet manipulations when managing
@@ -165,7 +165,7 @@ myLayout = tiled ||| Mirror tiled ||| Full
 --
 -- To match on the WM_NAME, you can use 'title' in the same way that
 -- 'className' and 'resource' are used below.
---
+
 myManageHook =
   composeAll
     [ className =? "MPlayer" --> doFloat,
@@ -174,7 +174,6 @@ myManageHook =
       resource =? "kdesktop" --> doIgnore
     ]
 
-------------------------------------------------------------------------
 -- Event handling
 
 -- * EwmhDesktops users should change this to ewmhDesktopsEventHook
@@ -182,7 +181,6 @@ myManageHook =
 -- Defines a custom handler function for X Events. The function should
 -- pure (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
---
 
 myEventHook = mempty
 
@@ -191,7 +189,7 @@ myEventHook = mempty
 
 -- Perform an arbitrary action on each internal state change or X event.
 -- See the 'XMonad.Hooks.DynamicLog' extension for examples.
---
+
 myLogHook = pure ()
 
 ------------------------------------------------------------------------
