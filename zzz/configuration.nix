@@ -21,10 +21,13 @@ in rec {
     pinned.home-manager.nixos
   ];
 
-  nixpkgs.pkgs = import pinned.nixpkgs { inherit (config.nixpkgs) config; };
-  nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.packageOverrides = pkgs: {
-    nur = import pinned.nix-user-repository { inherit (pinned.nixpkgs) ; };
+  nixpkgs = {
+    pkgs = import pinned.nixpkgs { inherit (config.nixpkgs) config; };
+
+    config.allowUnfree = true;
+    config.packageOverrides = pkgs: {
+      nur = import pinned.nix-user-repository { inherit (pinned.nixpkgs) ; };
+    };
   };
 
   nix.nixPath = [ "nixpkgs=${pinned.nixpkgs}" ];
@@ -40,13 +43,18 @@ in rec {
   services.zfs.autoScrub = { enable = true; };
   fileSystems."/home".neededForBoot = true;
 
-  networking.hostName = "zzz";
-  networking.hostId = "1337babe"; # haHAA
-  networking.networkmanager.enable = true;
+  networking = {
+    hostName = "zzz";
+    hostId = "1337babe"; # haHAA
+    networkmanager.enable = true;
 
-  networking.useDHCP = false;
-  networking.interfaces.enp9s0.useDHCP = true;
-  networking.interfaces.wlp8s0.useDHCP = true;
+    useDHCP = false;
+    interfaces.enp9s0.useDHCP = true;
+    interfaces.wlp8s0.useDHCP = true;
+
+    firewall.allowedTCPPorts = [ 19999 24272 ];
+    firewall.allowedUDPPorts = [ 24272 ];
+  };
 
   # Select internationalisation properties.
   console = {
@@ -59,31 +67,31 @@ in rec {
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";
 
-  environment.pathsToLink = [ "/share/zsh" ];
   environment.systemPackages = [ ];
+  environment.pathsToLink = [ "/share/zsh" ];
 
   virtualisation.docker = { enable = true; };
-  services.openssh = {
-    enable = true;
-    permitRootLogin = "yes";
-    passwordAuthentication = true;
+
+  services = {
+    openssh = {
+      enable = true;
+      permitRootLogin = "yes";
+      passwordAuthentication = true;
+    };
+
+    netdata = { enable = true; };
+
+    xserver = {
+      enable = true;
+      layout = "us";
+      xkbOptions = "ctrl:nocaps";
+      libinput.enable = true;
+      displayManager.startx.enable = true;
+    };
   };
-
-  services.netdata = { enable = true; };
-
-  networking.firewall.allowedTCPPorts = [ 19999 24272 ];
-  networking.firewall.allowedUDPPorts = [ 24272 ];
 
   sound.enable = true;
   hardware.pulseaudio.enable = true;
-
-  services.xserver = {
-    enable = true;
-    layout = "us";
-    xkbOptions = "ctrl:nocaps";
-    libinput.enable = true;
-    displayManager.startx.enable = true;
-  };
 
   users.users."${globalSettings.systemUsername}" = {
     uid = 1337;
@@ -131,6 +139,7 @@ in rec {
           xclip
         ];
 
+        file.".xinitrc".source = ./.xinitrc;
         sessionVariables = {
           EDITOR = "nvim";
           VISUAL = "nvim";
@@ -173,18 +182,30 @@ in rec {
 
       programs = {
         bat = { enable = true; };
+
         browserpass.enable = true;
+
         direnv = {
           enable = true;
           enableZshIntegration = true;
         };
+
         feh.enable = true;
+
         firefox.enable = true;
+
         kitty = {
           enable = true;
-          font.name = "Mononoki";
-          settings = { font_size = "16.0"; };
+          font = {
+            name = "Iosevka";
+            package = pkgs.iosevka;
+          };
+          settings = {
+            font_size = "14.0";
+            background_opacity = "0.7";
+          };
         };
+
         neovim = {
           enable = true;
           extraConfig = builtins.readFile ./nvim/custom.vim;
@@ -208,6 +229,7 @@ in rec {
             coc-yaml
           ];
         };
+
         command-not-found = { enable = true; };
 
         password-store = { enable = true; };
@@ -256,12 +278,11 @@ in rec {
         };
       };
 
-      services = {
-        # gpg-agent = {
-        #   enable = true;
-        #   enableSshSupport = true;
-        # };
-      };
+      # services = {
+      #   picom = {
+      #     enable = true;
+      #   };
+      # };
 
       xsession = {
         numlock.enable = true;
