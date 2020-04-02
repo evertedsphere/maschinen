@@ -12,25 +12,7 @@ let
     systemUsername = "rlptgod";
   };
 
-  pinned = {
-    nixpkgs = let
-      channelRelease = "nixos-20.09pre218613.ae6bdcc5358";
-      channelName = "unstable";
-      sha256 = "1aw77y31kh6ippjks5qzz5kqkz6pm5flnhjbp5k598m2pf86id9k";
-
-      url =
-        "https://releases.nixos.org/nixos/${channelName}/${channelRelease}/nixexprs.tar.xz";
-    in builtins.fetchTarball { inherit url sha256; };
-
-    home-manager = let
-      commitHash = "dd93c30";
-      sha256 = "0cq6ngagx68rb8w9cyimrl17khr0317m6mazx7fkvqay9qp1pd3y";
-
-      url =
-        "https://github.com/rycee/home-manager/archive/${commitHash}.tar.gz";
-      home-manager = builtins.fetchTarball { inherit url sha256; };
-    in (import home-manager { });
-  };
+  pinned = import ./pinned.nix;
 
 in rec {
 
@@ -39,9 +21,11 @@ in rec {
     pinned.home-manager.nixos
   ];
 
-  nixpkgs.pkgs =
-    import "${pinned.nixpkgs}" { inherit (config.nixpkgs) config; };
+  nixpkgs.pkgs = import pinned.nixpkgs { inherit (config.nixpkgs) config; };
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.packageOverrides = pkgs: {
+    nur = import pinned.nix-user-repository { inherit (pinned.nixpkgs) ; };
+  };
 
   nix.nixPath = [ "nixpkgs=${pinned.nixpkgs}" ];
 
@@ -78,14 +62,17 @@ in rec {
   environment.pathsToLink = [ "/share/zsh" ];
   environment.systemPackages = [ ];
 
+  virtualisation.docker = { enable = true; };
   services.openssh = {
     enable = true;
     permitRootLogin = "yes";
     passwordAuthentication = true;
   };
 
-  networking.firewall.allowedTCPPorts = [ ];
-  networking.firewall.allowedUDPPorts = [ ];
+  services.netdata = { enable = true; };
+
+  networking.firewall.allowedTCPPorts = [ 19999 24272 ];
+  networking.firewall.allowedUDPPorts = [ 24272 ];
 
   sound.enable = true;
   hardware.pulseaudio.enable = true;
@@ -101,7 +88,7 @@ in rec {
   users.users."${globalSettings.systemUsername}" = {
     uid = 1337;
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "docker" ];
     shell = "/home/${globalSettings.systemUsername}/.nix-profile/bin/zsh";
   };
 
@@ -122,6 +109,7 @@ in rec {
           htop
           gitAndTools.git-crypt
           nixfmt
+          ripgrep
           iosevka
           mononoki
           ormolu
@@ -130,6 +118,17 @@ in rec {
           nodejs
           dconf
           pinentry
+          glances
+          stress
+          gnome3.nautilus
+          ffmpegthumbnailer
+          shotwell
+          docker-compose
+          hydron
+          python3
+          qbittorrent
+
+          xclip
         ];
 
         sessionVariables = {
@@ -221,7 +220,8 @@ in rec {
         keychain = {
           enable = true;
           enableXsessionIntegration = true;
-          keys = [ ];
+          keys = [ "id_rsa" ];
+          agents = [ "gpg" "ssh" ];
         };
 
         beets = { enable = true; };
@@ -257,19 +257,15 @@ in rec {
       };
 
       services = {
-        gpg-agent = {
-          enable = true;
-          enableSshSupport = true;
-        };
+        # gpg-agent = {
+        #   enable = true;
+        #   enableSshSupport = true;
+        # };
       };
 
       xsession = {
         numlock.enable = true;
         enable = true;
-        pointerCursor = {
-          package = pkgs.xorg.xcursorthemes;
-          name = "whiteglass";
-        };
         windowManager.xmonad = {
           enable = true;
           enableContribAndExtras = true;
