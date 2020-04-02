@@ -211,7 +211,7 @@ in rec {
           settings = {
             window_padding_width = 12;
             font_size = "14.0";
-            background_opacity = "0.55";
+            background_opacity = "0.625";
           };
 
           extraConfig = ''
@@ -312,11 +312,16 @@ in rec {
 
         zsh = {
           enable = true;
-          enableCompletion = true;
-          enableAutosuggestions = true;
-          autocd = true;
-          history.save = 100000;
-          history.size = 100000;
+          oh-my-zsh = {
+            enable = true;
+            plugins = [ "sudo" ];
+            theme = "agnoster";
+          };
+          # enableCompletion = true;
+          # enableAutosuggestions = true;
+          # autocd = true;
+          # history.save = 100000;
+          # history.size = 100000;
         };
 
       };
