@@ -1,11 +1,14 @@
 { config, ... }:
 
 let
-
   globalSettings = {
     email = "evertedsphere@gmail.com";
     username = "evertedsphere";
     systemUsername = "rlptgod";
+  };
+  systemConstants = {
+    zfs_arc_min = 2147483648;
+    zfs_arc_max = 4294967296;
   };
 
   pinned = import ./pinned.nix;
@@ -23,13 +26,23 @@ in rec {
     config.allowUnfree = true;
     config.packageOverrides = pkgs: {
       # nur = import pinned.nix-user-repository { inherit (pinned.nixpkgs) ; };
-      picom-ibhagwan = pkgs.callPackage 
-        ./picom-ibhagwan.nix {};
+      picom-ibhagwan = pkgs.callPackage ./picom-ibhagwan.nix { };
     };
   };
 
   nix.nixPath = [ "nixpkgs=${pinned.nixpkgs}" ];
-
+  boot.kernelParams = [
+    "elevator=cfq"
+    "cgroup_enable=memory"
+    "swapaccount=1"
+  ];
+  boot.extraModprobeConfig = ''
+    options zfs zfs_arc_min=${builtins.toString systemConstants.zfs_arc_min}
+    options zfs zfs_arc_max=${builtins.toString systemConstants.zfs_arc_max}
+  '';
+    # options zfs_vdev_cache_bshift=18
+    # options l2arc_feed_again=0
+    # options zfs zfs_compressed_arc_enable=1
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -38,7 +51,23 @@ in rec {
   boot.supportedFilesystems = [ "zfs" ];
   boot.initrd.supportedFilesystems = [ "zfs" ];
   boot.zfs.enableUnstable = true;
-  services.zfs.autoScrub = { enable = true; };
+  boot.zfs.forceImportRoot = false;
+  boot.zfs.forceImportAll = false;
+  services.zfs = {
+    autoScrub = {
+      enable = true;
+      interval = "daily";
+    };
+    trim = {
+      enable = true;
+      interval = "daily";
+    };
+    autoSnapshot = {
+      enable = true;
+      frequent = 8;
+    };
+
+  };
   fileSystems."/home".neededForBoot = true;
 
   networking = {
@@ -336,9 +365,7 @@ in rec {
         polybar = {
           enable = true;
           extraConfig = builtins.readFile ./polybar.conf;
-          package = pkgs.polybar.override {
-            mpdSupport = true;
-          };
+          package = pkgs.polybar.override { mpdSupport = true; };
           script = ''
             source ~/.cache/wal/colors.sh
             export bg_opacity="bf"
