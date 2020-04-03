@@ -9,7 +9,6 @@ let
   };
 
   pinned = import ./pinned.nix;
-  pkgs0 = pinned.nixpkgs;
 
 in rec {
 
@@ -24,6 +23,8 @@ in rec {
     config.allowUnfree = true;
     config.packageOverrides = pkgs: {
       nur = import pinned.nix-user-repository { inherit (pinned.nixpkgs) ; };
+      picom-ibhagwan = pkgs.callPackage 
+        ./picom-ibhagwan.nix {};
     };
   };
 
@@ -85,12 +86,14 @@ in rec {
       libinput.enable = true;
 
       desktopManager.xterm.enable = true;
-      displayManager.lightdm.enable = true;
+      displayManager.gdm.enable = true;
       windowManager.session = [{
         name = "dummy";
         start = "${nixpkgs.pkgs.coreutils}/bin/true";
       }];
     };
+
+    gnome3.at-spi2-core.enable = true;
   };
 
   sound.enable = true;
@@ -120,8 +123,10 @@ in rec {
           htop
           gitAndTools.git-crypt
           nixfmt
+          i3lock
           ripgrep
           iosevka
+          neofetch
           mononoki
           ormolu
           discord
@@ -134,6 +139,7 @@ in rec {
           stress
           gnome3.nautilus
           ffmpegthumbnailer
+          hicolor-icon-theme
           shotwell
           docker-compose
           hydron
@@ -178,7 +184,7 @@ in rec {
         };
         iconTheme = {
           name = "Papirus-Dark";
-          package = pkgs.papirus-icon-theme;
+          package = pkgs.hicolor-icon-theme;
         };
         gtk2.extraConfig = ''
           gtk-application-prefer-dark-theme = true
@@ -233,6 +239,7 @@ in rec {
             # Formats
             vim-orgmode
             vim-yaml
+            haskell-vim
             dhall-vim
             idris-vim
             vim-nix
@@ -296,14 +303,14 @@ in rec {
           oh-my-zsh = {
             enable = true;
             plugins = [ "sudo" ];
-            theme = "agnoster";
+            theme = "steeef";
           };
           # enableCompletion = true;
           # enableAutosuggestions = true;
           # autocd = true;
           history.save = 100000;
           history.size = 100000;
-          initExtra = builtins.readFile ~/.cache/wal/colors.sh;
+          initExtra = "source ~/.cache/wal/colors.sh";
         };
 
       };
@@ -311,29 +318,49 @@ in rec {
       services = {
         udiskie.enable = true;
 
+        screen-locker = {
+          enable = true;
+          inactiveInterval = 1;
+          lockCmd = "${pkgs.i3lock}/bin/i3lock -n -c 000000";
+        };
+
+        polybar = {
+          enable = false;
+          extraConfig = builtins.readFile ./polybar.conf;
+          script = ''
+            polybar top &
+            polybar bottom &
+          '';
+        };
+
         # taffybar = {
         #   enable = true;
-        #   package = (import ./taffybar { inherit nixpkgs.pkgs; }).evsphbar;
+        #   # package = (import ./taffybar { inherit nixpkgs.pkgs; }).evsphbar;
         # };
 
         picom = {
           enable = true;
+          package = pkgs.picom-ibhagwan;
           backend = "glx";
           experimentalBackends = true;
           extraOptions = ''
             blur: 
             {
-              method = "gaussian";
-              size = 12;
-              deviation = 7.0;
+              method = "dual_kawase";
+              strength = 6;
             };
-            shadow-radius: 15;
+            shadow-radius: 20;
+            corner-radius: 30;
           '';
           fade = true;
           vSync = true;
+
           shadow = true;
-          shadowOpacity = "1.0";
-          shadowOffsets = [ (-15) (-15) ];
+          shadowOpacity = "0.7";
+          noDNDShadow = true;
+          noDockShadow = false;
+          shadowOffsets = [ (-20) (-20) ];
+
           fadeDelta = 3;
           fadeSteps = [ "0.04" "0.04" ];
           # inactiveDim = "0.20";
@@ -343,6 +370,7 @@ in rec {
       xsession = {
         numlock.enable = true;
         enable = true;
+        initExtra = "wal -R";
         windowManager.xmonad = {
           enable = true;
           enableContribAndExtras = true;
@@ -351,12 +379,22 @@ in rec {
               evsph-xmonad = hnew.callPackage ./xmonad { };
             };
           };
-          extraPackages = hp: [ hp.evsph-xmonad ];
+          extraPackages = hp: [ hp.evsph-xmonad hp.taffybar ];
           config = pkgs.writeText "xmonad.hs" ''
-            import XMonad (xmonad)
+            module Main where
+
+            import XMonad
+            import XMonad.Hooks.EwmhDesktops (ewmh)
+            import XMonad.Hooks.ManageDocks
+            import System.Taffybar.Support.PagerHints (pagerHints)
+
             import EvsphXMonad
-            main = do
-              xmonad evsphDefaults
+
+            main 
+              = xmonad 
+              $ docks 
+              $ ewmh 
+              $ pagerHints evsphDefaults
           '';
         };
       };

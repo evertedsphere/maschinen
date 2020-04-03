@@ -1,11 +1,13 @@
 module EvsphXMonad where
+
+import qualified Colors
 import qualified Data.Map as M
 import Data.Monoid
 import System.Exit
 import XMonad
+import XMonad.Hooks.ManageDocks
 import XMonad.Layout.Spacing
 import qualified XMonad.StackSet as W
-import qualified Colors
 
 myTerminal = "kitty"
 
@@ -18,7 +20,7 @@ myClickJustFocuses :: Bool
 myClickJustFocuses = True
 
 -- Width of the window border in pixels.
-myBorderWidth = 2
+myBorderWidth = 0
 
 -- modMask lets you specify which modkey you want to use.
 myModMask = mod4Mask
@@ -142,7 +144,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) =
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 
-myLayout = addSpacing $ tiled ||| Mirror tiled ||| Full
+myLayout = addSpacing $ avoidStruts $ tiled ||| Mirror tiled ||| Full
   where
     addSpacing = spacingRaw False (Border 12 12 12 12) True (Border 12 12 12 12) True
     -- default tiling algorithm partitions the screen into two panes
@@ -152,7 +154,7 @@ myLayout = addSpacing $ tiled ||| Mirror tiled ||| Full
     -- Default proportion of screen occupied by master pane
     ratio = 4 / 7
     -- Percent of screen to increment by when resizing panes
-    delta = 5 / 120
+    delta = 5 / 50
 
 -- Window rules:
 
@@ -203,23 +205,24 @@ myLogHook = pure ()
 myStartupHook = pure ()
 
 evsphDefaults =
-  def
-    { -- simple stuff
-      terminal = myTerminal,
-      focusFollowsMouse = myFocusFollowsMouse,
-      clickJustFocuses = myClickJustFocuses,
-      borderWidth = myBorderWidth,
-      modMask = myModMask,
-      workspaces = myWorkspaces,
-      normalBorderColor = myNormalBorderColor,
-      focusedBorderColor = myFocusedBorderColor,
-      -- key bindings
-      keys = myKeys,
-      mouseBindings = myMouseBindings,
-      -- hooks, layouts
-      layoutHook = myLayout,
-      manageHook = myManageHook,
-      handleEventHook = myEventHook,
-      logHook = myLogHook,
-      startupHook = myStartupHook
-    }
+  docks
+    def
+      { -- simple stuff
+        terminal = myTerminal,
+        focusFollowsMouse = myFocusFollowsMouse,
+        clickJustFocuses = myClickJustFocuses,
+        borderWidth = myBorderWidth,
+        modMask = myModMask,
+        workspaces = myWorkspaces,
+        normalBorderColor = myNormalBorderColor,
+        focusedBorderColor = myFocusedBorderColor,
+        -- key bindings
+        keys = myKeys,
+        mouseBindings = myMouseBindings,
+        -- hooks, layouts
+        layoutHook = myLayout,
+        manageHook = myManageHook,
+        handleEventHook = myEventHook,
+        logHook = myLogHook,
+        startupHook = myStartupHook
+      }
