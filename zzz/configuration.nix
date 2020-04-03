@@ -27,6 +27,14 @@ in rec {
     config.packageOverrides = pkgs: {
       # nur = import pinned.nix-user-repository { inherit (pinned.nixpkgs) ; };
       picom-ibhagwan = pkgs.callPackage ./picom-ibhagwan.nix { };
+      nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload"  ''
+        export __NV_PRIME_RENDER_OFFLOAD=1
+        export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
+        export __GLX_VENDOR_LIBRARY_NAME=nvidia
+        export __VK_LAYER_NV_optimus=NVIDIA_only
+
+        exec -a "$0" "$@"
+      '';
     };
   };
 
@@ -35,11 +43,13 @@ in rec {
     "elevator=cfq"
     "cgroup_enable=memory"
     "swapaccount=1"
+    "zfs.zfs_arc_min=${builtins.toString systemConstants.zfs_arc_min}"
+    "zfs.zfs_arc_max=${builtins.toString systemConstants.zfs_arc_max}"
   ];
-  boot.extraModprobeConfig = ''
-    options zfs zfs_arc_min=${builtins.toString systemConstants.zfs_arc_min}
-    options zfs zfs_arc_max=${builtins.toString systemConstants.zfs_arc_max}
-  '';
+  # boot.extraModprobeConfig = ''
+  #   options zfs zfs_arc_min=${builtins.toString systemConstants.zfs_arc_min}
+  #   options zfs zfs_arc_max=${builtins.toString systemConstants.zfs_arc_max}
+  # '';
     # options zfs_vdev_cache_bshift=18
     # options l2arc_feed_again=0
     # options zfs zfs_compressed_arc_enable=1
@@ -50,6 +60,7 @@ in rec {
   # ZFS/filesystem configuration
   boot.supportedFilesystems = [ "zfs" ];
   boot.initrd.supportedFilesystems = [ "zfs" ];
+  boot.blacklistedKernelModules = [ "i915" ];
   boot.zfs.enableUnstable = true;
   boot.zfs.forceImportRoot = false;
   boot.zfs.forceImportAll = false;
@@ -66,7 +77,6 @@ in rec {
       enable = true;
       frequent = 8;
     };
-
   };
   fileSystems."/home".neededForBoot = true;
 
@@ -94,7 +104,7 @@ in rec {
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";
 
-  environment.systemPackages = [ ];
+  environment.systemPackages = [ nixpkgs.pkgs.nvidia-offload ];
   environment.pathsToLink = [ "/share/zsh" ];
 
   virtualisation.docker = { enable = true; };
@@ -110,8 +120,10 @@ in rec {
 
     xserver = {
       enable = true;
+      videoDrivers = [ "modesetting" "nvidia" ];
       layout = "us";
       xkbOptions = "ctrl:nocaps";
+      dpi = 96;
       libinput.enable = true;
 
       desktopManager.xterm.enable = true;
@@ -123,6 +135,15 @@ in rec {
     };
 
     gnome3.at-spi2-core.enable = true;
+  };
+
+  hardware.nvidia = {
+    prime = {
+      #sync.enable = true;
+      offload.enable = true;
+      nvidiaBusId = "PCI:1:0:0";
+      intelBusId = "PCI:0:2:0";
+    };
   };
 
   sound.enable = true;
