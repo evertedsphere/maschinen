@@ -22,7 +22,7 @@ in rec {
 
     config.allowUnfree = true;
     config.packageOverrides = pkgs: {
-      nur = import pinned.nix-user-repository { inherit (pinned.nixpkgs) ; };
+      # nur = import pinned.nix-user-repository { inherit (pinned.nixpkgs) ; };
       picom-ibhagwan = pkgs.callPackage 
         ./picom-ibhagwan.nix {};
     };
@@ -102,7 +102,7 @@ in rec {
   users.users."${globalSettings.systemUsername}" = {
     uid = 1337;
     isNormalUser = true;
-    extraGroups = [ "wheel" "docker" "systemd-journal" ];
+    extraGroups = [ "wheel" "docker" "systemd-journal" "audio" ];
     shell = "/home/${globalSettings.systemUsername}/.nix-profile/bin/zsh";
   };
 
@@ -123,6 +123,7 @@ in rec {
           htop
           gitAndTools.git-crypt
           nixfmt
+          ncmpcpp
           i3lock
           ripgrep
           iosevka
@@ -133,6 +134,7 @@ in rec {
           pavucontrol
           nodejs
           pywal
+          wpgtk
           dconf
           pinentry
           glances
@@ -149,9 +151,9 @@ in rec {
 
           xclip
           xdg_utils
+          ncmpc
         ];
 
-        file.".xinitrc".source = ./.xinitrc;
         sessionVariables = {
           EDITOR = "nvim";
           VISUAL = "nvim";
@@ -216,7 +218,7 @@ in rec {
           settings = {
             window_padding_width = 12;
             font_size = "14.0";
-            background_opacity = "0.80";
+            background_opacity = "0.75";
           };
 
           extraConfig = "include ~/.cache/wal/colors-kitty.conf";
@@ -310,7 +312,9 @@ in rec {
           # autocd = true;
           history.save = 100000;
           history.size = 100000;
-          initExtra = "source ~/.cache/wal/colors.sh";
+          initExtra = ''
+            source ~/.cache/wal/colors.sh
+          '';
         };
 
       };
@@ -324,10 +328,23 @@ in rec {
           lockCmd = "${pkgs.i3lock}/bin/i3lock -n -c 000000";
         };
 
+        mpd = {
+          enable = true;
+          extraConfig = builtins.readFile ./mpd.conf;
+        };
+
         polybar = {
-          enable = false;
+          enable = true;
           extraConfig = builtins.readFile ./polybar.conf;
+          package = pkgs.polybar.override {
+            mpdSupport = true;
+          };
           script = ''
+            source ~/.cache/wal/colors.sh
+            export bg_opacity="bf"
+            export border_opacity="22"
+            export polybar_background="#''${bg_opacity}''${color0/'#'}"
+            export polybar_border="#''${border_opacity}''${color0/'#'}"
             polybar top &
             polybar bottom &
           '';
@@ -347,7 +364,7 @@ in rec {
             blur: 
             {
               method = "dual_kawase";
-              strength = 6;
+              strength = 10;
             };
             shadow-radius: 20;
             corner-radius: 30;
@@ -356,7 +373,7 @@ in rec {
           vSync = true;
 
           shadow = true;
-          shadowOpacity = "0.7";
+          shadowOpacity = "0.3";
           noDNDShadow = true;
           noDockShadow = false;
           shadowOffsets = [ (-20) (-20) ];

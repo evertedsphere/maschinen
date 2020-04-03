@@ -20,7 +20,7 @@ myClickJustFocuses :: Bool
 myClickJustFocuses = True
 
 -- Width of the window border in pixels.
-myBorderWidth = 0
+myBorderWidth = 2
 
 -- modMask lets you specify which modkey you want to use.
 myModMask = mod4Mask
@@ -146,7 +146,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) =
 
 myLayout = addSpacing $ avoidStruts $ tiled ||| Mirror tiled ||| Full
   where
-    addSpacing = spacingRaw False (Border 12 12 12 12) True (Border 12 12 12 12) True
+    addSpacing = spacingRaw False (Border 8 8 8 8) True (Border 8 8 8 8) True
     -- default tiling algorithm partitions the screen into two panes
     tiled = Tall nmaster delta ratio
     -- The default number of windows in the master pane
