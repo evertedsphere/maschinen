@@ -39,6 +39,7 @@ in rec {
   };
 
   nix.nixPath = [ "nixpkgs=${pinned.nixpkgs}" ];
+  boot.kernelPackages = nixpkgs.pkgs.linuxPackages_latest;
   boot.kernelParams = [
     "elevator=cfq"
     "cgroup_enable=memory"
@@ -104,7 +105,7 @@ in rec {
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";
 
-  environment.systemPackages = [ nixpkgs.pkgs.nvidia-offload ];
+  environment.systemPackages = [ ]; #nixpkgs.pkgs.nvidia-offload ];
   environment.pathsToLink = [ "/share/zsh" ];
 
   virtualisation.docker = { enable = true; };
@@ -120,14 +121,14 @@ in rec {
 
     xserver = {
       enable = true;
-      videoDrivers = [ "modesetting" "nvidia" ];
+      videoDrivers = [ "nvidia" ];
       layout = "us";
       xkbOptions = "ctrl:nocaps";
       dpi = 96;
       libinput.enable = true;
 
       desktopManager.xterm.enable = true;
-      displayManager.gdm.enable = true;
+      displayManager.lightdm.enable = true;
       windowManager.session = [{
         name = "dummy";
         start = "${nixpkgs.pkgs.coreutils}/bin/true";
@@ -137,10 +138,22 @@ in rec {
     gnome3.at-spi2-core.enable = true;
   };
 
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
+    s3tcSupport = true;
+    extraPackages = with nixpkgs.pkgs; [
+      libvdpau-va-gl
+      vaapiVdpau
+    ];
+  };
+
   hardware.nvidia = {
+    modesetting.enable = true;
     prime = {
-      #sync.enable = true;
-      offload.enable = true;
+      sync.enable = true;
+      # offload.enable = true;
       nvidiaBusId = "PCI:1:0:0";
       intelBusId = "PCI:0:2:0";
     };
