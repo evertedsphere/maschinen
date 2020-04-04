@@ -26,5 +26,5 @@ in
     };
   };
 
-  nix.nixPath = [ "nixpkgs=${pinned.nixpkgs}" ];
+  nix.nixPath = [ "nixpkgs=${pinned.nixpkgs}" "maschinen=${./.}" ];
 }
