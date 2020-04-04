@@ -27,7 +27,7 @@ in rec {
     config.packageOverrides = pkgs: {
       # nur = import pinned.nix-user-repository { inherit (pinned.nixpkgs) ; };
       picom-ibhagwan = pkgs.callPackage ./picom-ibhagwan.nix { };
-      nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload"  ''
+      nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
         export __NV_PRIME_RENDER_OFFLOAD=1
         export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
         export __GLX_VENDOR_LIBRARY_NAME=nvidia
@@ -102,7 +102,7 @@ in rec {
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";
 
-  environment.systemPackages = [ ]; #nixpkgs.pkgs.nvidia-offload ];
+  environment.systemPackages = [ ]; # nixpkgs.pkgs.nvidia-offload ];
   environment.pathsToLink = [ "/share/zsh" ];
 
   virtualisation.docker = { enable = true; };
@@ -140,10 +140,7 @@ in rec {
     driSupport = true;
     driSupport32Bit = true;
     s3tcSupport = true;
-    extraPackages = with nixpkgs.pkgs; [
-      libvdpau-va-gl
-      vaapiVdpau
-    ];
+    extraPackages = with nixpkgs.pkgs; [ libvdpau-va-gl vaapiVdpau ];
   };
 
   hardware.nvidia = {
@@ -381,7 +378,7 @@ in rec {
           treeView = true;
           meters = {
             left = [ "Tasks" "LoadAverage" "Blank" "CPU" "Memory" "Swap" ];
-            right = [];
+            right = [ ];
           };
         };
 
@@ -438,7 +435,10 @@ in rec {
         #   # package = (import ./taffybar { inherit nixpkgs.pkgs; }).evsphbar;
         # };
 
-        picom = {
+        picom = let
+          shadowRadius = 15;
+          shadowOffset = -1 * shadowRadius;
+        in {
           enable = true;
           package = pkgs.picom-ibhagwan;
           backend = "glx";
@@ -446,12 +446,12 @@ in rec {
           extraOptions = ''
             blur: {
               method = "dual_kawase";
-              strength = 6;
+              strength = 10;
               background = false;
               background-frame = false;
               background-fixed = false;
             }
-            shadow-radius: 15;
+            shadow-radius: ${builtins.toString shadowRadius};
             # corner-radius: 10.0;
           '';
           fade = true;
@@ -461,7 +461,7 @@ in rec {
           shadowOpacity = "0.6";
           noDNDShadow = true;
           noDockShadow = false;
-          shadowOffsets = [ (-15) (-15) ];
+          shadowOffsets = [ shadowOffset shadowOffset ];
 
           fadeDelta = 3;
           fadeSteps = [ "0.04" "0.04" ];
