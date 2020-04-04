@@ -11,8 +11,9 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner  = "ibhagwan";
     repo   = "picom";
-    rev    = "16f4a26bd1ea3e33f89212be99acbe27234362c8";
-    sha256 = "0b2bpaiyghdmfqmm5w1x58fj1a8aqmzvqcgwzsaxmq2ba2r2j2lh";
+    rev    = "375c5f7e8cfe747baf0ae1bd7d18f9c6b8afbf9c";
+    sha256 = "01lqnkqr40n7rbivbrqgl2xjqam8fng80cjwc6m62x12j52gswcm";
+
     fetchSubmodules = true;
   };
 

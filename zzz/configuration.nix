@@ -358,9 +358,14 @@ in rec {
         htop = {
           enable = true;
           hideThreads = true;
+          hideUserlandThreads = true;
           highlightBaseName = true;
           showProgramPath = false;
           treeView = true;
+          meters = {
+            left = [ "Tasks" "LoadAverage" "Blank" "CPU" "Memory" "Swap" ];
+            right = [];
+          };
         };
 
         zsh = {
@@ -422,19 +427,21 @@ in rec {
           backend = "glx";
           experimentalBackends = true;
           extraOptions = ''
-            blur: 
-            {
+            blur: {
               method = "dual_kawase";
-              strength = 10;
-            };
-            shadow-radius: 20;
-            corner-radius: 30;
+              strength = 6;
+              background = false;
+              background-frame = false;
+              background-fixed = false;
+            }
+            shadow-radius: 15;
+            # corner-radius: 10.0;
           '';
           fade = true;
           vSync = true;
 
           shadow = true;
-          shadowOpacity = "0.3";
+          shadowOpacity = "0.6";
           noDNDShadow = true;
           noDockShadow = false;
           shadowOffsets = [ (-20) (-20) ];
