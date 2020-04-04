@@ -5,6 +5,7 @@ import qualified Data.Map as M
 import Data.Monoid
 import System.Exit
 import XMonad
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 import XMonad.Layout.Spacing
 import qualified XMonad.StackSet as W
@@ -29,9 +30,9 @@ myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
-myNormalBorderColor = Colors.background
+myNormalBorderColor = Colors.color4
 
-myFocusedBorderColor = Colors.color6
+myFocusedBorderColor = Colors.color2
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
@@ -180,13 +181,7 @@ myManageHook =
 
 -- Event handling
 
--- * EwmhDesktops users should change this to ewmhDesktopsEventHook
---
--- Defines a custom handler function for X Events. The function should
--- pure (All True) if the default handler is to be run afterwards. To
--- combine event hooks use mappend or mconcat from Data.Monoid.
-
-myEventHook = mempty
+myEventHook = ewmhDesktopsEventHook <+> fullscreenEventHook
 
 -- Status bars and logging
 
@@ -204,9 +199,22 @@ myLogHook = pure ()
 -- By default, do nothing.
 myStartupHook = pure ()
 
+-- https://github.com/xmonad/xmonad-contrib/issues/150
+-- setEWMHDesktopGeometry = withDisplay $ \dpy -> do
+--     wm <- asks theRoot
+--     cardinalType <- getAtom "CARDINAL"
+--     desktopGeometryProp <- getAtom "_NET_DESKTOP_GEOMETRY"
+--     io $ do
+--         windowAttributes <- getWindowAttributes dpy wm
+--         let width = fromIntegral $ wa_width windowAttributes
+--             height = fromIntegral $ wa_height windowAttributes
+--         changeProperty32 dpy wm desktopGeometryProp cardinalType propModeReplace
+--                          [width, height]
+
 evsphDefaults =
-  docks
-    def
+  ewmh
+    $ docks
+    $ def
       { -- simple stuff
         terminal = myTerminal,
         focusFollowsMouse = myFocusFollowsMouse,

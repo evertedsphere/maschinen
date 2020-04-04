@@ -1,0 +1,28 @@
+{
+    "wallpaper": "/home/rlptgod/.config/wpg/wallpapers/pawel-czerwinski-sE97eb0WhGI-unsplash(1).jpg",
+    "alpha": "100",
+
+    "special": {
+        "background": "#131020",
+        "foreground": "#c1c1ce",
+        "cursor": "#c1c1ce"
+    },
+    "colors": {
+        "color0": "#131020",
+        "color1": "#B93E4A",
+        "color2": "#5468c2",
+        "color3": "#8454aa",
+        "color4": "#676B96",
+        "color5": "#916C99",
+        "color6": "#82859D",
+        "color7": "#c1c1ce",
+        "color8": "#878790",
+        "color9": "#B93E4A",
+        "color10": "#5468c2",
+        "color11": "#8454aa",
+        "color12": "#676B96",
+        "color13": "#916C99",
+        "color14": "#82859D",
+        "color15": "#c1c1ce"
+    }
+}

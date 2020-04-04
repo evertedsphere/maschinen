@@ -47,13 +47,10 @@ in rec {
     "zfs.zfs_arc_min=${builtins.toString systemConstants.zfs_arc_min}"
     "zfs.zfs_arc_max=${builtins.toString systemConstants.zfs_arc_max}"
   ];
-  # boot.extraModprobeConfig = ''
-  #   options zfs zfs_arc_min=${builtins.toString systemConstants.zfs_arc_min}
-  #   options zfs zfs_arc_max=${builtins.toString systemConstants.zfs_arc_max}
-  # '';
-    # options zfs_vdev_cache_bshift=18
-    # options l2arc_feed_again=0
-    # options zfs zfs_compressed_arc_enable=1
+  # options zfs_vdev_cache_bshift=18
+  # options l2arc_feed_again=0
+  # options zfs zfs_compressed_arc_enable=1
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -178,43 +175,60 @@ in rec {
         username = globalSettings.systemUsername;
 
         packages = with pkgs; [
-          nixops
-          next
+          # binutils
           fd
           wget
           curl
-          htop
           gitAndTools.git-crypt
-          nixfmt
-          ncmpcpp
-          i3lock
-          ripgrep
-          iosevka
           neofetch
-          mononoki
+          pciutils
+          stress
+
+          # "system"
+          nixops
+          htop
+          glances
+          docker-compose
+          pinentry
+
+          # programming
+          nixfmt
           ormolu
-          discord
-          pavucontrol
+          python2 # for wpg
+          # python3
           nodejs
+
+          # X apps
+          next
+          i3lock
+          gnome3.nautilus
+          discord
+          xclip
+          xdg_utils
+          qbittorrent
+
+          # media
+          ncmpcpp
+          ripgrep
+          ffmpegthumbnailer
+          pavucontrol
+          ncmpc
+          shotwell
+          scrot
+
+          # fonts
+          iosevka
+          mononoki
+
+          # theming
           pywal
           wpgtk
           dconf
-          pinentry
-          glances
-          stress
-          gnome3.nautilus
-          ffmpegthumbnailer
           hicolor-icon-theme
-          shotwell
-          docker-compose
-          hydron
-          python3
-          python2
-          qbittorrent
 
-          xclip
-          xdg_utils
-          ncmpc
+          # graphics
+          glxinfo
+          lxappearance
         ];
 
         sessionVariables = {
@@ -235,9 +249,12 @@ in rec {
           videos = "videos";
         };
       };
-      manual.html.enable = true;
-      manual.manpages.enable = true;
-      manual.json.enable = true;
+
+      manual = {
+        html.enable = true;
+        manpages.enable = true;
+        json.enable = true;
+      };
 
       news.display = "show";
 
@@ -448,7 +465,7 @@ in rec {
 
           fadeDelta = 3;
           fadeSteps = [ "0.04" "0.04" ];
-          # inactiveDim = "0.20";
+          # inactiveDim = "0.10";
         };
       };
 
