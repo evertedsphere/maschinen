@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ ... }:
 
 let
 
@@ -16,10 +16,6 @@ in rec {
     # bootloader, zfs, etc.
     ./boot-and-filesystems.nix
 
-    # i18n, timezones, etc
-    # TODO find better name
-    ./system-configuration.nix
-
     # networking setup
     ./networking.nix
 
@@ -35,16 +31,26 @@ in rec {
     # home-manager NixOS module
     hm-nixos
 
+    # home-manager setup for the primary user
     ./users/me
   ];
-
-  # options zfs_vdev_cache_bshift=18
-  # options l2arc_feed_again=0
-  # options zfs zfs_compressed_arc_enable=1
 
   environment.systemPackages = [ ];
   environment.pathsToLink = [ "/share/zsh" ];
 
+  # Select internationalisation properties.
+  console = {
+    font = "Lat2-Terminus16";
+    keyMap = "us";
+  };
+
+  # TODO set currency etc
+  # TODO should we do this at the home-manager level?
+  # probably not but still
+  i18n.defaultLocale = "en_US.UTF-8";
+
+  # Set your time zone.
+  time.timeZone = "Asia/Kolkata";
 
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
