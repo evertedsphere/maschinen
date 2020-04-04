@@ -461,7 +461,7 @@ in rec {
           shadowOpacity = "0.6";
           noDNDShadow = true;
           noDockShadow = false;
-          shadowOffsets = [ (-20) (-20) ];
+          shadowOffsets = [ (-15) (-15) ];
 
           fadeDelta = 3;
           fadeSteps = [ "0.04" "0.04" ];
