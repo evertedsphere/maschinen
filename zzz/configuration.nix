@@ -1,11 +1,13 @@
 { config, ... }:
 
 let
+
   globalSettings = {
     email = "evertedsphere@gmail.com";
     username = "evertedsphere";
     systemUsername = "rlptgod";
   };
+
   systemConstants = {
     zfs_arc_min = 2147483648;
     zfs_arc_max = 4294967296;
@@ -15,8 +17,10 @@ let
 
 in rec {
 
-  imports = [ # Include the results of the hardware scan.
+  imports = [
+    # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    # home-manager NixOS module
     pinned.home-manager.nixos
   ];
 
@@ -24,6 +28,7 @@ in rec {
     pkgs = import pinned.nixpkgs { inherit (config.nixpkgs) config; };
 
     config.allowUnfree = true;
+
     config.packageOverrides = pkgs: {
       # nur = import pinned.nix-user-repository { inherit (pinned.nixpkgs) ; };
       picom-ibhagwan = pkgs.callPackage ./picom-ibhagwan.nix { };
@@ -39,29 +44,35 @@ in rec {
   };
 
   nix.nixPath = [ "nixpkgs=${pinned.nixpkgs}" ];
-  boot.kernelPackages = nixpkgs.pkgs.linuxPackages_latest;
-  boot.kernelParams = [
-    "elevator=cfq"
-    "cgroup_enable=memory"
-    "swapaccount=1"
-    "zfs.zfs_arc_min=${builtins.toString systemConstants.zfs_arc_min}"
-    "zfs.zfs_arc_max=${builtins.toString systemConstants.zfs_arc_max}"
-  ];
+
   # options zfs_vdev_cache_bshift=18
   # options l2arc_feed_again=0
   # options zfs zfs_compressed_arc_enable=1
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot = {
+    kernelPackages = nixpkgs.pkgs.linuxPackages_latest;
+    kernelParams = [
+      "elevator=cfq"
+      "cgroup_enable=memory"
+      "swapaccount=1"
+      "zfs.zfs_arc_min=${builtins.toString systemConstants.zfs_arc_min}"
+      "zfs.zfs_arc_max=${builtins.toString systemConstants.zfs_arc_max}"
+    ];
 
-  # ZFS/filesystem configuration
-  boot.supportedFilesystems = [ "zfs" ];
-  boot.initrd.supportedFilesystems = [ "zfs" ];
-  boot.blacklistedKernelModules = [ "i915" ];
-  boot.zfs.enableUnstable = true;
-  boot.zfs.forceImportRoot = false;
-  boot.zfs.forceImportAll = false;
+    # Use the systemd-boot EFI boot loader.
+    loader.systemd-boot.enable = true;
+    loader.efi.canTouchEfiVariables = true;
+
+    # ZFS/filesystem configuration
+
+    supportedFilesystems = [ "zfs" ];
+    initrd.supportedFilesystems = [ "zfs" ];
+    blacklistedKernelModules = [ "i915" ];
+    zfs.enableUnstable = true;
+    zfs.forceImportRoot = false;
+    zfs.forceImportAll = false;
+  };
+
   services.zfs = {
     autoScrub = {
       enable = true;
@@ -76,6 +87,7 @@ in rec {
       frequent = 8;
     };
   };
+
   fileSystems."/home".neededForBoot = true;
 
   networking = {
