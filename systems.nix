@@ -1,3 +1,1 @@
-{
-  zzz = ./zzz/configuration.nix;
-}
+{ zzz = ./zzz/configuration.nix; }
