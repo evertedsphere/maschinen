@@ -1,0 +1,78 @@
+* evsph's machines
+
+This repo is intended to host nearly-purely-declarative nixops-based
+configurations for all NixOS or Nix-using systems that I own and/or
+administer.
+
+The German name (I'm not even sure it works as slang the way "machine" does
+in English) for the repo is purely so I could have a single, somewhat
+distinctive word (to put into =nix.nixPath= and so on) that wasn't "machines"
+(which nixops uses in its output) or "systems" (which might be confused with
+=current-system= and such).
+
+** zzz
+
+Current daily driver, a Lenovo Ideapad Y700, being used at the moment as a
+test bed/learning environment for ZFS (hence the hostname) and this sort of
+=rm /etc/nixos/*=-style pinned pure-nixops administration of =localhost=.
+Expected to be retired from active service at the end of April 2020. Other
+things I'm testing on the current NixOS install are
+[[https://github.com/netdata/netdata][netdata]] (apparently
+=services.netdata.enable = true= beats 200 lines of
+collectd+Prometheus+Grafana setup hollow when all I want is pretty graphs and
+ZFS stats support?) and declarative pywal/wpgtk-based UI theming.
+
+[[zzz/neofetch.png]]
+
+** Hardware notes
+
+In late March 2020 I figured I'd move back from Arch (which I used for a
+month because I needed a few AUR packages) to NixOS but on ZFS this time: my
+first time not using ext4! As soon as I rebooted into the new system and
+tried restoring backups from an external hard disk, my system would
+soft-lockup and become unusable until I did a hard reboot. System monitors
+like =htop= and =free= didn't report anything that I could tell was out of
+the ordinary for ZFS, but I was completely convinced that ZFS memory usage
+and caching / compression / I/O performance were to blame. I
+[[https://twitter.com/evertedsphere/status/1246092817241264129][resigned]]
+myself to many months of scouring the internet for ZFS tuning information
+from grizzled BSD sysadmins until I could finally run a computer on ZFS and
+not have it soft-lock when running demanding tasks like, oh, I don't know,
+copying files, determined to have my compression and snapshotting at any
+cost.
+
+My friend [[https://github.com/taktoa][Remy]], who had experience with ZFS,
+reasoned that this was completely foreign to his experience with the
+filesystem and instead hypothesised that what I was seeing was not at all a
+ZFS issue but was instead an /Intel integrated graphics/ issue brought on by
+a driver bug in a new kernel version that he'd heard of, which I ran into
+because when I removed the Arch install and put NixOS on the laptop instead I
+inadvertently also moved to a newer kernel version.
+
+This made no sense.
+
+But sure enough, blacklisting the =i915= module solved everything. It was not
+IO load, after all, that was crashing the system, it was just /load/: the
+only anything-intensive load I'd ever put on the NixOS install was copying
+over files from my external backups, which somehow triggered the =i915=
+issues. ZFS was
+[[https://twitter.com/evertedsphere/status/1246205144070410240][innocent]], after all.
+
+(Remy regrets not making a bet with me beforehand.)
+
+Instead, this laptop now runs a pure-NVIDIA (=nvidia.prime.sync=)
+configuration (see [[zzz/graphics.nix]]) with the dGPU
+running all the time and handling all graphics, which only works out because
+this laptop thankfully has a muxed GPU, which I understand means that the
+display is not connected to the intel iGPU so I can afford to run completely
+without it.
+
+** ariadne
+
+In-transit Inspiron 7591, intended as a replacement for the [[#zzz][zzz]] machine.
+
+* meta: reference nixops/NixOS configs
+
+** [[https://github.com/Infinisil/system][Infinisil/system]]
+
+

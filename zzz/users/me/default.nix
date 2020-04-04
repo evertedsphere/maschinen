@@ -55,6 +55,7 @@ in {
           xclip
           xdg_utils
           qbittorrent
+          flameshot
 
           # media
           ncmpcpp

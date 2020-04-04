@@ -14,13 +14,7 @@ in {
 
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
-    kernelParams = [
-      "elevator=cfq"
-      "cgroup_enable=memory"
-      "swapaccount=1"
-      "zfs.zfs_arc_min=${builtins.toString systemConstants.zfs_arc_min}"
-      "zfs.zfs_arc_max=${builtins.toString systemConstants.zfs_arc_max}"
-    ];
+    kernelParams = [ ];
 
     # Use the systemd-boot EFI boot loader.
     loader.systemd-boot.enable = true;
