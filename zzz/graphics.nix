@@ -1,6 +1,9 @@
 { pkgs, ... }:
 
 {
+  # broken
+  boot.blacklistedKernelModules = [ "i915" ];
+
   hardware.opengl = {
     enable = true;
     driSupport = true;

@@ -24,7 +24,6 @@ in {
 
     supportedFilesystems = [ "zfs" ];
     initrd.supportedFilesystems = [ "zfs" ];
-    blacklistedKernelModules = [ "i915" ];
     zfs.enableUnstable = true;
     zfs.forceImportRoot = false;
     zfs.forceImportAll = false;
