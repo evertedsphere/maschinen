@@ -14,7 +14,7 @@ in
 
     config.packageOverrides = pkgs: {
       # nur = import pinned.nix-user-repository { inherit (pinned.nixpkgs) ; };
-      picom-ibhagwan = pkgs.callPackage ./picom-ibhagwan.nix { };
+      picom-ibhagwan = pkgs.callPackage ./overrides/picom-ibhagwan.nix { };
       nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
         export __NV_PRIME_RENDER_OFFLOAD=1
         export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0

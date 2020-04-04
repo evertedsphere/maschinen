@@ -155,7 +155,7 @@ in {
 
         neovim = {
           enable = true;
-          extraConfig = builtins.readFile ./nvim/custom.vim;
+          extraConfig = builtins.readFile ./apps/nvim/custom.vim;
           plugins = with pkgs.vimPlugins; [
             # Basics
             vim-commentary
@@ -264,12 +264,12 @@ in {
 
         mpd = {
           enable = true;
-          extraConfig = builtins.readFile ./mpd.conf;
+          extraConfig = builtins.readFile ./apps/mpd.conf;
         };
 
         polybar = {
           enable = true;
-          extraConfig = builtins.readFile ./polybar.conf;
+          extraConfig = builtins.readFile ./apps/polybar.conf;
           package = pkgs.polybar.override { mpdSupport = true; };
           script = ''
             source ~/.cache/wal/colors.sh
@@ -281,11 +281,6 @@ in {
             polybar bottom &
           '';
         };
-
-        # taffybar = {
-        #   enable = true;
-        #   # package = (import ./taffybar { inherit nixpkgs.pkgs; }).evsphbar;
-        # };
 
         picom = let
           shadowRadius = 15;
@@ -330,7 +325,7 @@ in {
           enableContribAndExtras = true;
           haskellPackages = pkgs.haskellPackages.override {
             overrides = hnew: hold: {
-              evsph-xmonad = hnew.callPackage ./xmonad { };
+              evsph-xmonad = hnew.callPackage ./apps/xmonad { };
             };
           };
           extraPackages = hp: [ hp.evsph-xmonad hp.taffybar ];

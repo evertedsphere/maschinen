@@ -8,11 +8,11 @@ let
   };
 
 in {
-  boot = {
-    # "set font size earlier in the boot process"
-    # https://discourse.nixos.org/t/settings-for-increasing-text-mode-font-size/2849/3
-    earlyVconsoleSetup = true;
+  # "set font size earlier in the boot process"
+  # https://discourse.nixos.org/t/settings-for-increasing-text-mode-font-size/2849/3
+  console.earlySetup = true;
 
+  boot = {
     kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [
       "elevator=cfq"
