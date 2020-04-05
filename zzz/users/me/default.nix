@@ -140,6 +140,7 @@ in {
 
       programs = {
         bat = { enable = true; };
+        info = { enable = true; };
 
         irssi = {
           enable = true;
@@ -147,7 +148,6 @@ in {
           networks = {
             freenode = {
               nick = "evertedsphere";
-              ssl.enable = true;
               server = {
                 address = "chat.freenode.net";
                 port = 6697;
