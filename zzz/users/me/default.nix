@@ -24,8 +24,13 @@ in {
       home = {
         extraOutputsToInstall = [ "doc" "info" "devdoc" ];
         username = globalSettings.systemUsername;
+        file.".maschine.ini".text = ''
+          system-config-path = ${pkgs.system-config-src}
+        '';
 
         packages = with pkgs; [
+          system-config-src
+
           # binutils
           fd
           wget
@@ -268,7 +273,7 @@ in {
         screen-locker = {
           enable = true;
           inactiveInterval = 1;
-          lockCmd = "${pkgs.glitchlock}/bin/glitchlock";
+          lockCmd = "${pkgs.glitchlock}/bin/glitchlock.sh";
         };
 
         mpd = {

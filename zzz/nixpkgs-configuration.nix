@@ -15,9 +15,10 @@ in
     config.packageOverrides = pkgs: {
       # nur = import pinned.nix-user-repository { inherit (pinned.nixpkgs) ; };
       picom-ibhagwan = pkgs.callPackage ./overrides/picom-ibhagwan.nix { };
-      glitchlock = pkgs.writeScriptBin "glitchlock" ../scripts/glitchlock;
+      glitchlock = pkgs.writeScriptBin "glitchlock" ../scripts/glitchlock.sh;
+      system-config-src = pkgs.copyPathToStore ./.;
     };
   };
 
-  nix.nixPath = [ "nixpkgs=${pinned.nixpkgs}" "maschinen=${./.}" ];
+  nix.nixPath = [ "nixpkgs=${pinned.nixpkgs}" ];
 }
