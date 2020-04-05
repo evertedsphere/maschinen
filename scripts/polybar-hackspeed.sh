@@ -1,5 +1,7 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # shellcheck disable=SC2016,SC2059
+
+set -euo pipefail
 
 KEYBOARD_ID="AT Translated Set 2 keyboard"
 
@@ -34,20 +36,20 @@ case "$METRIC" in
 	*) echo "Unsupported metric \"$METRIC\""; exit 1; ;;
 esac
 
-hackspeed_cache="$(mktemp -p '' hackspeed_cache.XXXXX)"
+hackspeed_cache="$(@coreutils@/bin/mktemp -p '' hackspeed_cache.XXXXX)"
 trap 'rm "$hackspeed_cache"' EXIT
 
 # Write a dot to our cache for each key press
 printf '' > "$hackspeed_cache"
-xinput test "$KEYBOARD_ID" | \
-	stdbuf -o0 awk '$1 == "key" && $2 == "press" && ('"$CONDITION"') {printf "."}' >> "$hackspeed_cache" &
+@xinput@/bin/xinput test "$KEYBOARD_ID" | \
+	@coreutils@/bin/stdbuf -o0 @gawk@/bin/awk '$1 == "key" && $2 == "press" && ('"$CONDITION"') {printf "."}' >> "$hackspeed_cache" &
 
 while true; do
 	# Ask the kernel how big the file is with the command `stat`. The number we
 	# get is the file size in bytes, which equals the amount of dots the file
 	# contains, and hence how much keys were pressed since the file was last
 	# cleared.
-	lines=$(stat --format %s "$hackspeed_cache")
+	lines=$(@coreutils@/bin/stat --format %s "$hackspeed_cache")
 
 	# Truncate the cache file so that in the next iteration, we count only new
 	# keypresses
@@ -59,5 +61,5 @@ while true; do
 
 	printf "$FORMAT\\n" "$value"
 
-	sleep $INTERVAL
+	@coreutils@/bin/sleep $INTERVAL
 done

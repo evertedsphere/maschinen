@@ -322,7 +322,7 @@ in {
 
         polybar = {
           enable = true;
-          extraConfig = builtins.readFile ./apps/polybar.conf;
+          extraConfig = import ./apps/polybar.nix { inherit pkgs; };
           package = pkgs.polybar.override { mpdSupport = true; };
           script = ''
             source ~/.cache/wal/colors.sh

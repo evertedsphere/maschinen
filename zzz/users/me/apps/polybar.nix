@@ -1,6 +1,9 @@
+{ pkgs }:
+
+''
 [settings]
-format-background = ${env:polybar_background}
-format-foreground = ${xrdb:color7:#222}
+format-background = ''${env:polybar_background}
+format-foreground = ''${xrdb:color7:#222}
 format-underline =
 format-overline =
 format-spacing =
@@ -27,12 +30,12 @@ margin-bottom = 10
 margin-top = 10
 
 [colors]
-background = ${env:polybar_background}
-foreground = ${xrdb:color7:#222}
-foreground-alt = ${xrdb:color7:#222}
-primary = ${xrdb:color1:#222}
-secondary = ${xrdb:color2:#222}
-alert = ${xrdb:color3:#222}
+background = ''${env:polybar_background}
+foreground = ''${xrdb:color7:#222}
+foreground-alt = ''${xrdb:color7:#222}
+primary = ''${xrdb:color1:#222}
+secondary = ''${xrdb:color2:#222}
+alert = ''${xrdb:color3:#222}
 
 [section/base]
 fixed-center = true
@@ -41,9 +44,9 @@ height = 30
 offset-x = 16
 offset-y = 16
 border-size = 2
-border-color = ${env:polybar_border}
-background = ${colors.background}
-foreground = ${colors.foreground}
+border-color = ''${env:polybar_border}
+background = ''${colors.background}
+foreground = ''${colors.foreground}
 font-0 = PragmataPro Mono:size=13:style=Bold;4
 font-1 = PragmataPro Mono:size=13:style=Bold Italic;4
 font-2 = PragmataPro Mono:size=13:style=Regular;4
@@ -57,7 +60,7 @@ module-margin = 1
 inherit = section/base
 bottom = false
 
-modules-left = cpu ram wlan
+modules-left = hackspeed cpu ram wlan
 modules-center = xworkspaces
 modules-right = date
 
@@ -123,7 +126,7 @@ icon-next = ⏭
 type = internal/temperature
 interval = 0.5
 ; To list all the zone types, run 
-; $ for i in /sys/class/thermal/thermal_zone*; do echo "$i: $(<$i/type)"; done
+; ''$ for i in /sys/class/thermal/thermal_zone*; do echo "''$i: ''$(<''$i/type)"; done
 thermal-zone = 0
 base-temperature = 20
 warn-temperature = 80
@@ -138,3 +141,9 @@ interval = 5
 type = internal/network
 interface = wlp8s0
 label-connected = rx %downspeed:9% tx %upspeed:9%
+
+[module/hackspeed]
+type = custom/script
+exec = ${pkgs.maschinen-scripts}/polybar-hackspeed.sh
+tail = true
+''
