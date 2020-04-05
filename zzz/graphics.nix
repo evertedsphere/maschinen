@@ -28,10 +28,24 @@
     layout = "us";
     xkbOptions = "ctrl:nocaps";
     dpi = 96;
-    libinput.enable = true;
+    libinput = {
+      enable = true;
+      disableWhileTyping = true;
+      naturalScrolling = false;
+      additionalOptions = ''
+        Option "PalmDetection" "True"
+      '';
+    };
 
     desktopManager.xterm.enable = true;
-    displayManager.lightdm.enable = true;
+    displayManager.lightdm = {
+      enable = true;
+
+      greeter.enable = false;
+      autoLogin.enable = true;
+      # FIXME
+      autoLogin.user = "rlptgod";
+    };
     windowManager.session = [{
       name = "dummy";
       start = "${pkgs.coreutils}/bin/true";

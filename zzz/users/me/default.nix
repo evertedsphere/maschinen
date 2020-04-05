@@ -25,12 +25,12 @@ in {
         extraOutputsToInstall = [ "doc" "info" "devdoc" ];
         username = globalSettings.systemUsername;
         file.".maschine.ini".text = ''
-          system-config-path = ${pkgs.system-config-src}
+          system-config-path = ${pkgs.maschinen-system}
           scripts = ${pkgs.maschinen-scripts}
         '';
 
         packages = with pkgs; [
-          system-config-src
+          maschinen-system
           maschinen-scripts
 
           # binutils
@@ -44,6 +44,10 @@ in {
           stress
           glitchlock
 
+          # net
+          wavemon
+          kismet
+
           # media
           imagemagick
 
@@ -55,6 +59,7 @@ in {
           lm_sensors
           psmisc
           lsof
+          firejail
 
           # programming
           nixfmt

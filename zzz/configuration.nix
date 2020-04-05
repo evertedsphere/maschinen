@@ -35,6 +35,11 @@ in rec {
     ./users/me
   ];
 
+  documentation.dev.enable = true;
+  documentation.doc.enable = true;
+
+  hardware.cpu.intel.updateMicrocode = true;
+
   environment.systemPackages = [ ];
   environment.pathsToLink = [ "/share/zsh" ];
 
