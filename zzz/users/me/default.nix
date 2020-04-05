@@ -39,6 +39,9 @@ in {
           htop
           glances
           pinentry
+          lm_sensors
+          psmisc
+          lsof
 
           # programming
           nixfmt
@@ -326,25 +329,20 @@ in {
           enableContribAndExtras = true;
           haskellPackages = pkgs.haskellPackages.override {
             overrides = hnew: hold: {
+              # FIXME why cant i find callCabal2Nix in hnew?
+              # even nix-repl says callHackage is a thing but not callCabal2Nix
+              # ...
               evsph-xmonad = hnew.callPackage ./apps/xmonad { };
             };
           };
-          extraPackages = hp: [ hp.evsph-xmonad hp.taffybar ];
+          extraPackages = hp: [ hp.evsph-xmonad ];
           config = pkgs.writeText "xmonad.hs" ''
             module Main where
 
             import XMonad
-            import XMonad.Hooks.EwmhDesktops (ewmh)
-            import XMonad.Hooks.ManageDocks
-            import System.Taffybar.Support.PagerHints (pagerHints)
+            import qualified EvsphXMonad
 
-            import EvsphXMonad
-
-            main 
-              = xmonad 
-              $ docks 
-              $ ewmh 
-              $ pagerHints evsphDefaults
+            main = xmonad EvsphXMonad.customConfig
           '';
         };
       };

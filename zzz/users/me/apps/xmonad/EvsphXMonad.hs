@@ -1,8 +1,9 @@
-module EvsphXMonad where
+module EvsphXMonad (customConfig) where
 
 import qualified Colors
 import qualified Data.Map as M
 import Data.Monoid
+import Graphics.X11.ExtraTypes.XF86
 import System.Exit
 import XMonad
 import XMonad.Hooks.EwmhDesktops
@@ -75,6 +76,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) =
       ((modm, xK_comma), sendMessage (IncMasterN 1)),
       -- Deincrement the number of windows in the master area
       ((modm, xK_period), sendMessage (IncMasterN (-1))),
+      ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume 0 +5%"),
+      ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume 0 -5%"),
       -- Toggle the status bar gap
       -- Use this binding with avoidStruts from Hooks.ManageDocks.
       -- See also the statusBar function from Hooks.DynamicLog.
@@ -212,25 +215,25 @@ myStartupHook = pure ()
 --                          [width, height]
 
 evsphDefaults =
-  ewmh
-    $ docks
-    $ def
-      { -- simple stuff
-        terminal = myTerminal,
-        focusFollowsMouse = myFocusFollowsMouse,
-        clickJustFocuses = myClickJustFocuses,
-        borderWidth = myBorderWidth,
-        modMask = myModMask,
-        workspaces = myWorkspaces,
-        normalBorderColor = myNormalBorderColor,
-        focusedBorderColor = myFocusedBorderColor,
-        -- key bindings
-        keys = myKeys,
-        mouseBindings = myMouseBindings,
-        -- hooks, layouts
-        layoutHook = myLayout,
-        manageHook = myManageHook,
-        handleEventHook = myEventHook,
-        logHook = myLogHook,
-        startupHook = myStartupHook
-      }
+  def
+    { -- simple stuff
+      terminal = myTerminal,
+      focusFollowsMouse = myFocusFollowsMouse,
+      clickJustFocuses = myClickJustFocuses,
+      borderWidth = myBorderWidth,
+      modMask = myModMask,
+      workspaces = myWorkspaces,
+      normalBorderColor = myNormalBorderColor,
+      focusedBorderColor = myFocusedBorderColor,
+      -- key bindings
+      keys = myKeys,
+      mouseBindings = myMouseBindings,
+      -- hooks, layouts
+      layoutHook = myLayout,
+      manageHook = myManageHook,
+      handleEventHook = myEventHook,
+      logHook = myLogHook,
+      startupHook = myStartupHook
+    }
+
+customConfig = docks $ ewmh $ evsphDefaults
