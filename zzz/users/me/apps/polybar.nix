@@ -60,9 +60,9 @@ module-margin = 1
 inherit = section/base
 bottom = false
 
-modules-left = hackspeed cpu ram wlan
+modules-left = cpu ram wlan
 modules-center = xworkspaces
-modules-right = date
+modules-right = hackspeed date
 
 [bar/bottom]
 inherit = section/base
