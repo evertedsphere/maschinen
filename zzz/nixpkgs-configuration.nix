@@ -1,12 +1,10 @@
 { config, ... }:
 
-let 
+let
 
   pinned = import ./pinned.nix;
 
-in
-
-{
+in {
   nixpkgs = {
     pkgs = import pinned.nixpkgs { inherit (config.nixpkgs) config; };
 

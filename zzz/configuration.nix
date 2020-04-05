@@ -24,7 +24,7 @@ in rec {
 
     # audio, sound
     ./sound.nix
-    
+
     # services
     ./services.nix
 

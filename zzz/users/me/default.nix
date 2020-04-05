@@ -141,6 +141,26 @@ in {
       programs = {
         bat = { enable = true; };
 
+        irssi = {
+          enable = true;
+
+          networks = {
+            freenode = {
+              nick = "evertedsphere";
+              ssl.enable = true;
+              server = {
+                address = "chat.freenode.net";
+                port = 6697;
+                autoConnect = true;
+              };
+              channels = {
+                nixos.autoJoin = true;
+                haskell.autoJoin = true;
+              };
+            };
+          };
+        };
+
         browserpass.enable = true;
 
         direnv = {
