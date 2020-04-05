@@ -37,6 +37,7 @@ in {
           curl
           gitAndTools.git-crypt
           neofetch
+          gotop
           pciutils
           stress
           glitchlock
