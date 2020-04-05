@@ -93,6 +93,15 @@ in {
           # graphics
           glxinfo
           lxappearance
+
+          # social
+          tdesktop
+          signal-desktop
+          signal-cli
+
+          # for the lockscreen
+          sox
+          font-awesome_5
         ];
 
         sessionVariables = {

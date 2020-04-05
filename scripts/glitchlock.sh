@@ -1,5 +1,6 @@
-#! /usr/bin/env nix-shell
-#! nix-shell --pure -i bash -p imagemagick sox font-awesome_5 scrot i3lock
+#!/usr/bin/env bash
+
+set -euo pipefail
 
 # glitchy lockscreen script, source:
 # https://github.com/x-zvf/dotfiles/blob/master/scripts/scrlock.sh
@@ -29,3 +30,6 @@ convert -gravity center -font "FontAwesome-Regular" \
 # -e doesn't try to authenticate when no character is entered
 i3lock -n -e -u -i $pngFile
 rm $pngFile $bmpFile $glitched
+
+# /usr/bin/env nix-shell
+# nix-shell --pure -i bash -p imagemagick sox font-awesome_5 scrot i3lock
