@@ -381,10 +381,7 @@ in {
           enableContribAndExtras = true;
           haskellPackages = pkgs.haskellPackages.override {
             overrides = hnew: hold: {
-              # FIXME why cant i find callCabal2Nix in hnew?
-              # even nix-repl says callHackage is a thing but not callCabal2Nix
-              # ...
-              evsph-xmonad = hnew.callPackage ./apps/xmonad { };
+              evsph-xmonad = hnew.callCabal2nix ./apps/xmonad { };
             };
           };
           extraPackages = hp: [ hp.evsph-xmonad ];
