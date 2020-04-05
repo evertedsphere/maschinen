@@ -67,7 +67,7 @@ this laptop thankfully has a muxed GPU, which I understand means that the
 display is not connected to the intel iGPU so I can afford to run completely
 without it.
 
-** ariadne
+** mystic
 
 In-transit Inspiron 7591, intended as a replacement for the [[#zzz][zzz]] machine.
 
