@@ -274,7 +274,7 @@ in {
         screen-locker = {
           enable = true;
           inactiveInterval = 1;
-          lockCmd = "${pkgs.glitchlock}/bin/glitchlock.sh";
+          lockCmd = "${pkgs.glitchlock}/bin/glitchlock";
         };
 
         mpd = {
@@ -308,12 +308,15 @@ in {
           extraOptions = ''
             blur: {
               method = "dual_kawase";
-              strength = 10;
+              strength = 8;
               background = false;
               background-frame = false;
               background-fixed = false;
             }
+
             shadow-radius: ${builtins.toString shadowRadius};
+
+            # (disabled) slightly rounded corners
             # corner-radius: 10.0;
           '';
           fade = true;

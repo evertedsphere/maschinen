@@ -11,8 +11,8 @@ stdenv.mkDerivation rec {
   src = fetchFromGitHub {
     owner  = "ibhagwan";
     repo   = "picom";
-    rev    = "375c5f7e8cfe747baf0ae1bd7d18f9c6b8afbf9c";
-    sha256 = "01lqnkqr40n7rbivbrqgl2xjqam8fng80cjwc6m62x12j52gswcm";
+    rev    = "8f9fb151e96dc18f4b1d8c18419be6a6e4b9dcbf";
+    sha256 = "1vx6fzr9px9nr9p0d83snzczgzbg7d9j8i184nr4xmc8f8hmb5dy";
 
     fetchSubmodules = true;
   };
@@ -38,8 +38,10 @@ stdenv.mkDerivation rec {
 
   NIX_CFLAGS_COMPILE = "-fno-strict-aliasing -Wno-error=format-security";
 
+  mesonBuildType = "release";
+
   mesonFlags = [
-    "-Dbuild_docs=true"
+    "-Dwith_docs=true"
   ];
 
   installFlags = [ "PREFIX=$(out)" ];
