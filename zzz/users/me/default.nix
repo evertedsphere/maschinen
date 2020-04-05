@@ -13,6 +13,7 @@ in {
     uid = 1337;
     isNormalUser = true;
     extraGroups = [ "wheel" "docker" "systemd-journal" "audio" ];
+    # FIXME can we not do this pls. maybe get path from hm
     shell = "/home/${globalSettings.systemUsername}/.nix-profile/bin/zsh";
   };
 
@@ -33,6 +34,10 @@ in {
           neofetch
           pciutils
           stress
+          glitchlock
+
+          # media
+          imagemagick
 
           # "system"
           nixops
@@ -263,7 +268,7 @@ in {
         screen-locker = {
           enable = true;
           inactiveInterval = 1;
-          lockCmd = "${pkgs.i3lock}/bin/i3lock -n -c 000000";
+          lockCmd = "${pkgs.glitchlock}/bin/glitchlock";
         };
 
         mpd = {
