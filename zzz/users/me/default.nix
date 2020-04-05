@@ -26,10 +26,12 @@ in {
         username = globalSettings.systemUsername;
         file.".maschine.ini".text = ''
           system-config-path = ${pkgs.system-config-src}
+          scripts = ${pkgs.maschinen-scripts}
         '';
 
         packages = with pkgs; [
           system-config-src
+          maschinen-scripts
 
           # binutils
           fd
@@ -299,6 +301,13 @@ in {
 
       services = {
         udiskie.enable = true;
+
+        redshift = {
+          enable = true;
+          # provider = "geoclue2";
+          latitude = "22.56250000";
+          longitude = "88.36277778";
+        };
 
         screen-locker = {
           enable = true;

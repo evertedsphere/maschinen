@@ -15,6 +15,7 @@ in {
       picom-ibhagwan = pkgs.callPackage ./overrides/picom-ibhagwan.nix { };
       glitchlock = pkgs.writeScriptBin "glitchlock" ../scripts/glitchlock.sh;
       system-config-src = pkgs.copyPathToStore ./.;
+      maschinen-scripts = pkgs.copyPathToStore ../scripts;
     };
   };
 
