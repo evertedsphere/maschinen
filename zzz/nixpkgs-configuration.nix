@@ -33,6 +33,8 @@ in {
   nix.nixPath = [
     # break nixos-rebuild etc
     "nixos-config=${cfg}"
+    "nixpkgs=/run/current-system/maschinen-nixpkgs"
+    "nixpkgs-overlays=/run/current-system/maschinen-overlays"
   ];
 
   system.extraSystemBuilderCmds = ''
