@@ -30,16 +30,21 @@ in {
     };
   };
 
-  nix.nixPath = [ 
+  nix.nixPath = [
     "nixos-config=${cfg}"
-    "nixpkgs=/run/current-system/nixpkgs"
-    "nixpkgs-overlays=/run/current-system/overlays"
-    "maschinen-system=/run/current-system/maschinen-system"
+    # "nixpkgs=/run/current-system/nixpkgs"
+    # "nixpkgs-overlays=/run/current-system/overlays"
+    # "maschinen-system=/run/current-system/maschinen-system"
   ];
 
   system.extraSystemBuilderCmds = ''
-    ln -sv ${builtins.path { name = "current-nixpkgs"; path = pkgs.path; }} $out/nixpkgs
-    ln -sv ${./overlays} $out/overlays
+    ln -sv ${
+      builtins.path {
+        name = "maschinen-nixpkgs";
+        path = pkgs.path;
+      }
+    } $out/maschinen-nixpkgs
+    ln -sv ${./overlays} $out/maschinen-overlays
     ln -sv ${./.} $out/maschinen-system
   '';
 }

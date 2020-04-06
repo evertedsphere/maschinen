@@ -1,10 +1,6 @@
 { ... }:
 
-let
-
-  hm-nixos = (import ./pinned.nix).home-manager.nixos;
-
-in rec {
+{
 
   imports = [
     # overriding package sets and such
@@ -29,7 +25,7 @@ in rec {
     ./services.nix
 
     # home-manager NixOS module
-    hm-nixos
+    <home-manager/nixos>
 
     # home-manager setup for the primary user
     ./users/me
