@@ -14,6 +14,7 @@ in {
 
     config.packageOverrides = pkgs: {
       # nur = import pinned.nix-user-repository { inherit (pinned.nixpkgs) ; };
+      unstable = import <unstable> {};
       picom-ibhagwan = pkgs.callPackage ./overrides/picom-ibhagwan.nix { };
       maschinen-system = pkgs.copyPathToStore ./.;
       maschinen-scripts = pkgs.runCommand "maschinen-scripts" {

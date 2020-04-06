@@ -53,6 +53,7 @@ in {
           # "system"
           nixops
           htop
+          unstable.kmon
           glances
           pinentry
           lm_sensors
