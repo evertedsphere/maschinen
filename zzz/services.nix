@@ -4,7 +4,7 @@
 # https://github.com/roastiek/overlays/blob/6e1976521222a92a9d0edcbf37fce30cf9187a4f/bobo-laptop-2in1/hardware-configuration.nix
 
 {
-  
+
   boot.cleanTmpDir = true;
 
   services = {
