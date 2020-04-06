@@ -42,7 +42,6 @@ in {
           gotop
           pciutils
           stress
-          glitchlock
 
           # net
           wavemon
@@ -317,7 +316,7 @@ in {
         screen-locker = {
           enable = true;
           inactiveInterval = 1;
-          lockCmd = "${pkgs.glitchlock}/bin/glitchlock";
+          lockCmd = "${pkgs.maschinen-scripts}/glitchlock.sh";
         };
 
         mpd = {

@@ -15,26 +15,23 @@ in {
     config.packageOverrides = pkgs: {
       # nur = import pinned.nix-user-repository { inherit (pinned.nixpkgs) ; };
       picom-ibhagwan = pkgs.callPackage ./overrides/picom-ibhagwan.nix { };
-      glitchlock = pkgs.writeScriptBin "glitchlock" ../scripts/glitchlock.sh;
       maschinen-system = pkgs.copyPathToStore ./.;
       maschinen-scripts = pkgs.runCommand "maschinen-scripts" {
         xinput = pkgs.xorg.xinput;
-        gawk = pkgs.gawk;
-        coreutils = pkgs.coreutils;
+        inherit (pkgs) gawk coreutils scrot sox imagemagick i3lock;
       } ''
         cp -r ${../scripts} $out
         chmod -R +w $out
         patchShebangs $out
         substituteAllInPlace $out/polybar-hackspeed.sh
+        substituteAllInPlace $out/glitchlock.sh
       '';
     };
   };
 
   nix.nixPath = [
+    # break nixos-rebuild etc
     "nixos-config=${cfg}"
-    # "nixpkgs=/run/current-system/nixpkgs"
-    # "nixpkgs-overlays=/run/current-system/overlays"
-    # "maschinen-system=/run/current-system/maschinen-system"
   ];
 
   system.extraSystemBuilderCmds = ''
