@@ -71,6 +71,14 @@ without it.
 
 In-transit Inspiron 7591, intended as a replacement for the [[#zzz][zzz]] machine.
 
+* scripts, services, etc
+
+** glitchlock
+
+A "glitchy" lockscreen.
+
+[[./glitchlock.png]]
+
 * meta: reference nixops/NixOS configs
 
 ** [[https://github.com/Infinisil/system][Infinisil/system]]
