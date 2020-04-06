@@ -12,7 +12,7 @@ in {
   users.users."${globalSettings.systemUsername}" = {
     uid = 1337;
     isNormalUser = true;
-    extraGroups = [ "wheel" "docker" "systemd-journal" "audio" ];
+    extraGroups = [ "wheel" "docker" "systemd-journal" "audio" "input" ];
     # FIXME can we not do this pls. maybe get path from hm
     shell = "/home/${globalSettings.systemUsername}/.nix-profile/bin/zsh";
   };
@@ -67,6 +67,7 @@ in {
           python2 # for wpg
           # python3
           nodejs
+          niv
 
           # X apps
           next
