@@ -1,0 +1,3 @@
+[submodule "deps/nixpkgs"]
+	path = deps/nixpkgs
+	url = https://github.com/evertedsphere/nixpkgs
