@@ -7,6 +7,7 @@ let
     assert builtins.trace "you're on your ser- i don't care, use nixops!" false;
     {}
   '';
+  unstable = import <unstable> { };
 
 in {
   nixpkgs = {
@@ -14,7 +15,7 @@ in {
 
     config.packageOverrides = pkgs: {
       # nur = import pinned.nix-user-repository { inherit (pinned.nixpkgs) ; };
-      unstable = import <unstable> {};
+      inherit unstable;
       picom-ibhagwan = pkgs.callPackage ./overrides/picom-ibhagwan.nix { };
       maschinen-system = pkgs.copyPathToStore ./.;
       maschinen-scripts = pkgs.runCommand "maschinen-scripts" {
@@ -35,6 +36,7 @@ in {
     "nixos-config=${cfg}"
     "nixpkgs=/run/current-system/maschinen-nixpkgs"
     "nixpkgs-overlays=/run/current-system/maschinen-overlays"
+    "nixpkgs-unstable=/run/current-system/maschinen-unstable"
   ];
 
   system.extraSystemBuilderCmds = ''
@@ -46,5 +48,11 @@ in {
     } $out/maschinen-nixpkgs
     ln -sv ${./overlays} $out/maschinen-overlays
     ln -sv ${./.} $out/maschinen-system
+    ln -sv ${
+      builtins.path {
+        name = "maschinen-unstable";
+        path = unstable.path;
+      }
+    } $out/maschinen-unstable
   '';
 }

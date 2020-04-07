@@ -24,7 +24,6 @@
 
     thermald = {
       enable = true;
-      debug = true;
       # configFile = pkgs.writeText "thermald.conf" "";
     };
 
