@@ -21,6 +21,9 @@
     # audio, sound
     ./sound.nix
 
+    # kb
+    ./keyboard.nix
+
     # services
     ./services.nix
 

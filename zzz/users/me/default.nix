@@ -60,6 +60,7 @@ in {
           psmisc
           lsof
           firejail
+          kmonad
 
           # programming
           nixfmt
