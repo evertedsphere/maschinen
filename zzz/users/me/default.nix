@@ -44,8 +44,8 @@ in {
           stress
 
           # net
-          wavemon
-          kismet
+          # wavemon
+          # kismet
 
           # media
           imagemagick

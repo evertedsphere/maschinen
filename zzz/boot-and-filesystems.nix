@@ -13,7 +13,7 @@ in {
   console.earlySetup = true;
 
   boot = {
-    kernelPackages = pkgs.linuxPackages_latest;
+    # kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [ ];
 
     # Use the systemd-boot EFI boot loader.
