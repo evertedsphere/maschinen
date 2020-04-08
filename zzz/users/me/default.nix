@@ -362,12 +362,12 @@ in {
             shadow-radius: ${builtins.toString shadowRadius};
 
             # (disabled) slightly rounded corners
-            # corner-radius: 10.0;
+            corner-radius: 10.0;
           '';
           fade = true;
           vSync = true;
 
-          shadow = true;
+          shadow = false;
           shadowOpacity = "0.6";
           noDNDShadow = true;
           noDockShadow = false;

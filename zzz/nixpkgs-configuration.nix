@@ -16,7 +16,7 @@ in {
     config.packageOverrides = pkgs: {
       # nur = import pinned.nix-user-repository { inherit (pinned.nixpkgs) ; };
       inherit unstable;
-      xkeysnail = pkgs.callPackage ./overrides/xkeysnail.nix {};
+      kmonad = pkgs.haskellPackages.callPackage ./overrides/kmonad.nix {};
       picom-ibhagwan = pkgs.callPackage ./overrides/picom-ibhagwan.nix { };
       maschinen-system = pkgs.copyPathToStore ./.;
       maschinen-scripts = pkgs.runCommand "maschinen-scripts" {

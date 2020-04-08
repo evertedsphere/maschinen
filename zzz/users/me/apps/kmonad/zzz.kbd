@@ -1,0 +1,81 @@
+INPUT = LINUX_DEVICE L64 /dev/input/event0
+OUTPUT = UINPUT_SINK "maschinen-tastatur"
+
+/*
+
+    _         _         _         _         _         _         _         _         _         _         _         _         _         _  
+    _         _         _         _         _         _         _         _         _         _         _         _         _         _      
+    _         _         _         _         _         _         _         _         _         _         _         _         _         _
+    _         _         _         _         _         _         _         _         _         _         _         _         _  
+    _         _         _         _         _         _         _         _         _         _         _         _         _ 
+    _                   _         _                             _                             _         _         _         _         _   
+
+*/
+
+@sft = LT-shift
+
+@caps      = TN esc       lctl
+@S-caps    = TN S-esc     S-lctl
+@M-caps    = TN M-esc     M-lctl
+@M-S-caps  = TN M-S-esc   M-S-lctl
+
+@tab       = TN tab       LT-meta
+@S-tab     = TN S-tab     LT-shiftmeta
+
+@M-sft     = LT-shiftmeta
+
+SRC
+    esc       f1        f2        f3        f4        f5        f6        f7        f8        f9        f10       f11       f12       prnt
+    grv       1         2         3         4         5         6         7         8         9         0         -         =         bspc 
+    tab       q         w         e         r         t         y         u         i         o         p         [         ]         \
+    caps      a         s         d         f         g         h         j         k         l         ;         '                   ret
+    lsft      z         x         c         v         b         n         m         ,         .         /         rsft      up
+    lctl                lmet      lalt                          spc                           ralt      rctl      left      down      rght
+
+LAYER base
+    esc       f1        f2        f3        f4        f5        f6        f7        f8        f9        f10       f11       f12       prnt
+    grv       S-1       S-2       S-3       S-4       S-5       S-6       S-7       S-8       S-9       S-0       -         =         bspc 
+    @tab      q         w         e         r         t         y         u         i         o         p         [         ]         \
+    @caps     a         s         d         f         g         h         j         k         l         ret       '                   ;
+    @sft      z         x         c         v         b         n         m         ,         .         /         @sft      up
+    lctl                @tab      lalt                          spc                           ralt      rctl      left      down      rght
+
+LAYER shift
+    S-esc     S-f1      S-f2      S-f3      S-f4      S-f5      S-f6      S-f7      S-f8      S-f9      S-f10     S-f11     S-f12     S-prnt
+    S-grv     1         2         3         4         5         6         7         8         9         0         S--       S-=       S-bspc 
+    @S-tab    S-q       S-w       S-e       S-r       S-t       S-y       S-u       S-i       S-o       S-p       S-[       S-]       S-\
+    @S-caps   S-a       S-s       S-d       S-f       S-g       S-h       S-j       S-k       S-l       S-ret     S-'                 S-;
+    _         S-z       S-x       S-c       S-v       S-b       S-n       S-m       S-,       S-.       S-/       _         up
+    S-lctl              @S-tab    S-lalt                        S-spc                         S-ralt    S-rctl    S-left    S-down    S-rght
+
+LAYER meta
+    M-esc     M-f1      M-f2      M-f3      M-f4      M-f5      M-f6      M-f7      M-f8      M-f9      M-f10     M-f11     M-f12     M-prnt
+    M-grv     M-1       M-2       M-3       M-4       M-5       M-6       M-7       M-8       M-9       M-0       M--       M-=       M-bspc 
+    _         M-q       M-w       M-e       M-r       M-t       M-y       M-u       M-i       M-o       M-p       M-[       M-]       M-\
+    @M-caps   M-a       M-s       M-d       M-f       M-g       M-h       M-j       M-k       M-l       M-ret     M-'                 M-;
+    @M-sft    M-z       M-x       M-c       M-v       M-b       M-n       M-m       M-,       M-.       M-/       @M-sft    M-up
+    M-lctl              M-lmet    M-lalt                        M-spc                         M-ralt    M-rctl    M-left    M-down    M-rght
+
+LAYER shiftmeta
+    M-S-esc   M-S-f1    M-S-f2    M-S-f3    M-S-f4    M-S-f5    M-S-f6    M-S-f7    M-S-f8    M-S-f9    M-S-f10   M-S-f11   M-S-f12   M-S-prnt
+    M-S-grv   M-S-1     M-S-2     M-S-3     M-S-4     M-S-5     M-S-6     M-S-7     M-S-8     M-S-9     M-S-0     M-S--     M-S-=     M-S-bspc 
+    _         M-S-q     M-S-w     M-S-e     M-S-r     M-S-t     M-S-y     M-S-u     M-S-i     M-S-o     M-S-p     M-S-[     M-S-]     M-S-\
+    @M-S-caps M-S-a     M-S-s     M-S-d     M-S-f     M-S-g     M-S-h     M-S-j     M-S-k     M-S-l     M-S-ret   M-S-'               M-S-;
+    _         M-S-z     M-S-x     M-S-c     M-S-v     M-S-b     M-S-n     M-S-m     M-S-,     M-S-.     M-S-/     _         M-S-up
+    M-S-lctl            M-S-lmet  M-S-lalt                      M-S-spc                       M-S-ralt  M-S-rctl  M-S-left  M-S-down  M-S-rght
+
+/* LAYER alt */
+/*     A-esc     A-f1      A-f2      A-f3      A-f4      A-f5      A-f6      A-f7      A-f8      A-f9      A-f10     A-f11     A-f12     A-prnt */
+/*     A-grv     1         2         3         4         5         6         7         8         9         0         -         =         A-bspc */ 
+/*     A-tab     A-q       A-w       A-e       A-r       A-t       A-y       A-u       A-i       A-o       A-p       A-[       A-]       A-\ */
+/*     @A-caps   A-a       A-s       A-d       A-f       A-g       A-h       A-j       A-k       A-l       A-;       A-'                 A-ret */
+/*     _         A-z       A-x       A-c       A-v       A-b       A-n       A-m       A-,       A-.       A-/       _         up */
+    /* A-lctl              lmet      lalt                          spc                           ralt      rctl      left      down      rght */
+
+/* LAYER hyper */
+/*     esc       f1        f2        f3        f4        f5        f6        f7        f8        f9        f10       f11       f12       prnt */
+/*     grv       !         @         #         $         %         ^         &         *         (         )         _         =         bspc */
+/*     @tab      q         w         e         r         t         y         u         i         o         p         [         ]         \ */
+/*     @caps     a         s         d         f         g         h         j         k         l         ;         '                   ret */
+/*     @sft      z         x         c         v         b         n         m         ,         .         /         @sft      up */
+/*     lctl                lmet      lalt                          spc                           ralt      rctl      left      down      rght */

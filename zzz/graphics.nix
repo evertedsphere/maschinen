@@ -26,7 +26,7 @@
     enable = true;
     videoDrivers = [ "nvidia" ];
     layout = "us";
-    xkbOptions = "ctrl:nocaps";
+    # xkbOptions = "ctrl:nocaps";
     dpi = 96;
     libinput = {
       enable = true;
