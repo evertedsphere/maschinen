@@ -27,6 +27,13 @@
       # configFile = pkgs.writeText "thermald.conf" "";
     };
 
+    undervolt = {
+      enable = true;
+      coreOffset = "-170";
+      uncoreOffset = "-175";
+      analogioOffset = "-140";
+    };
+
     avahi = {
       enable = true;
       nssmdns = true;
