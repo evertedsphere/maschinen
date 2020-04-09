@@ -76,9 +76,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) =
       ((modm, xK_comma), sendMessage (IncMasterN 1)),
       -- Deincrement the number of windows in the master area
       ((modm, xK_period), sendMessage (IncMasterN (-1))),
-      ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume 0 +5%"),
-      ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume 0 -5%"),
-      ((0, xK_Print), spawn "flameshot gui -p ~/img/scrots/"),
+      ((shiftMask, xK_f11), spawn "pactl set-sink-volume 0 -5%"),
+      ((shiftMask, xK_f12), spawn "pactl set-sink-volume 0 +5%"),
+      ((shiftMask, xK_Print), spawn "flameshot gui -p ~/img/scrots/"),
       -- Toggle the status bar gap
       -- Use this binding with avoidStruts from Hooks.ManageDocks.
       -- See also the statusBar function from Hooks.DynamicLog.
