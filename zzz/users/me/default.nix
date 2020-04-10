@@ -318,7 +318,7 @@ in {
 
         screen-locker = {
           enable = true;
-          inactiveInterval = 1;
+          inactiveInterval = 5;
           lockCmd = "${pkgs.maschinen-scripts}/glitchlock.sh";
         };
 
