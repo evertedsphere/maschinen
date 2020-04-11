@@ -14,7 +14,7 @@ in {
 
   boot = {
     # kernelPackages = pkgs.linuxPackages_latest;
-    kernelParams = [ ];
+    kernelParams = [ "elevator=noop" ];
 
     # Use the systemd-boot EFI boot loader.
     loader.systemd-boot.enable = true;
