@@ -199,7 +199,7 @@ in {
 
           settings = {
             window_padding_width = 12;
-            font_size = "14.0";
+            font_size = "12.0";
             background_opacity = "0.75";
           };
 
@@ -237,7 +237,20 @@ in {
             coc-nvim
             coc-fzf
             coc-prettier
+            coc-java
             coc-yaml
+            coc-snippets
+            vim-snippets 
+            coc-highlight
+            coc-html
+            coc-json
+            coc-neco
+            coc-git
+            coc-lists
+            coc-yank
+            coc-vimtex
+            # coc-denite
+            # denite
           ];
         };
 
@@ -308,6 +321,8 @@ in {
 
       services = {
         udiskie.enable = true;
+
+        lorri.enable = true;
 
         redshift = {
           enable = true;
